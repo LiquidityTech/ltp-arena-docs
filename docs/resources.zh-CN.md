@@ -188,7 +188,7 @@ rapidx market get-symbol-info --json
 | API 参考（英文） | [`rapidx-api.md`](./rapidx-api.md) |
 | 资源清单 | 本文档 |
 | 旧版 REST API 参考 | [`api-reference.zh-CN.md`](api-reference.zh-CN.md) |
-| 在线文档 | <https://docs.liquiditytech.com/rapidx/> |
+| 在线文档 | <https://github.com/LiquidityTech/ltp-arena-docs> |
 
 ---
 

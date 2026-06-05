@@ -202,7 +202,7 @@ rapidx order list --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 
 ## 支持
 
-- **文档**：<https://docs.liquiditytech.com/rapidx/>
+- **文档**：<https://github.com/LiquidityTech/ltp-arena-docs>
 - **Issue 追踪**：<https://github.com/liquiditytech/rapidx-cli/issues>
 - **联系方式**：详见 `resources.zh-CN.md`
 

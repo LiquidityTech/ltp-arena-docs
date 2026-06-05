@@ -202,7 +202,7 @@ Full specs in [`rapidx-api.md`](./rapidx-api.md).
 
 ## Support
 
-- **Documentation**: <https://docs.liquiditytech.com/rapidx/>
+- **Documentation**: <https://github.com/LiquidityTech/ltp-arena-docs>
 - **Issue tracker**: <https://github.com/liquiditytech/rapidx-cli/issues>
 - **Contact**: see `resources.md`
 

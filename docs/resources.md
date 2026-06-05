@@ -188,7 +188,7 @@ rapidx market get-symbol-info --json
 | API reference (CN) | [`rapidx-api.zh-CN.md`](./rapidx-api.zh-CN.md) |
 | Resource manifest | This document |
 | Legacy REST API reference | [`api-reference.md`](api-reference.md) |
-| Online documentation | <https://docs.liquiditytech.com/rapidx/> |
+| Online documentation | <https://github.com/LiquidityTech/ltp-arena-docs> |
 
 ---
 
