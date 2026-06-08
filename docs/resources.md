@@ -182,13 +182,11 @@ rapidx market get-symbol-info --json
 
 | Document | Location |
 |----------|----------|
-| Participant kit overview (EN) | [`README.md`](./README.md) |
-| Participant kit overview (CN) | [`README.zh-CN.md`](./README.zh-CN.md) |
-| API reference (EN) | [`rapidx-api.md`](./rapidx-api.md) |
-| API reference (CN) | [`rapidx-api.zh-CN.md`](./rapidx-api.zh-CN.md) |
+| Getting started | [`01-quickstart.md`](./01-quickstart.md) · [`01-quickstart.zh-CN.md`](./01-quickstart.zh-CN.md) |
+| CLI & MCP reference | [`02-mcp-reference.md`](./02-mcp-reference.md) · [`02-mcp-reference.zh-CN.md`](./02-mcp-reference.zh-CN.md) |
+| Advanced REST & WebSocket | [`03-advanced-api.md`](./03-advanced-api.md) · [`03-advanced-api.zh-CN.md`](./03-advanced-api.zh-CN.md) |
 | Resource manifest | This document |
-| Legacy REST API reference | [`api-reference.md`](api-reference.md) |
-| Online documentation | <https://github.com/LiquidityTech/ltp-arena-docs> |
+| GitHub repository | <https://github.com/LiquidityTech/ltp-arena-docs> |
 
 ---
 

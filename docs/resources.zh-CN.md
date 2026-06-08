@@ -182,13 +182,11 @@ rapidx market get-symbol-info --json
 
 | 文档 | 位置 |
 |------|------|
-| 参赛包总览（中文） | [`README.zh-CN.md`](./README.zh-CN.md) |
-| 参赛包总览（英文） | [`README.md`](./README.md) |
-| API 参考（中文） | [`rapidx-api.zh-CN.md`](./rapidx-api.zh-CN.md) |
-| API 参考（英文） | [`rapidx-api.md`](./rapidx-api.md) |
+| 快速上手 | [`01-quickstart.zh-CN.md`](./01-quickstart.zh-CN.md) · [`01-quickstart.md`](./01-quickstart.md) |
+| CLI 与 MCP 参考 | [`02-mcp-reference.zh-CN.md`](./02-mcp-reference.zh-CN.md) · [`02-mcp-reference.md`](./02-mcp-reference.md) |
+| 进阶 REST 与 WebSocket | [`03-advanced-api.zh-CN.md`](./03-advanced-api.zh-CN.md) · [`03-advanced-api.md`](./03-advanced-api.md) |
 | 资源清单 | 本文档 |
-| 旧版 REST API 参考 | [`api-reference.zh-CN.md`](api-reference.zh-CN.md) |
-| 在线文档 | <https://github.com/LiquidityTech/ltp-arena-docs> |
+| GitHub 仓库 | <https://github.com/LiquidityTech/ltp-arena-docs> |
 
 ---
 
