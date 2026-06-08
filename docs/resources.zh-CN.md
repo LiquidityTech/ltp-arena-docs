@@ -109,6 +109,7 @@ npm install -g @liquiditytech/rapidx-cli@latest
 
 | CLI | MCP 工具 |
 |-----|---------|
+| `rapidx order preview` | `rapidx/order/preview` |
 | `rapidx order place-preview` | `rapidx/order/place-preview` |
 | `rapidx order place` | `rapidx/order/place` |
 | `rapidx order amend-preview` | `rapidx/order/amend-preview` |
@@ -144,7 +145,7 @@ npm install -g @liquiditytech/rapidx-cli@latest
 | `rapidx trade preview` | `rapidx/trade/preview` |
 | `rapidx trade verify-live` | `rapidx/trade/verify-live` |
 
-完整入参/出参规范见 [`rapidx-api.zh-CN.md`](./rapidx-api.zh-CN.md)。
+完整入参/出参规范见 [`02-mcp-reference.zh-CN.md`](./02-mcp-reference.zh-CN.md)。
 
 ---
 

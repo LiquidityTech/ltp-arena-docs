@@ -114,7 +114,7 @@ hermes skills install LiquidityTech/ltp-rapidx-skill/skills/ltp-rapidx-trading
 
 ```bash
 rapidx market get-ticker --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx account balance --input '{"mode":"portfolio"}' --json
+rapidx account balance --input '{"mode":"portfolio"}' --json   # "portfolio" = 大赛账户类型
 rapidx order list --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 ```
 
@@ -178,6 +178,7 @@ rapidx market get-symbol-info --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --jso
 rapidx order place-preview --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "60000",
   "quantity": "0.001",
@@ -187,7 +188,10 @@ rapidx order place-preview --input '{
 }' --json
 ```
 
-预览响应：
+> `positionSide` **必填** — 大赛账户默认为 `BOTH`（双向持仓）模式，每笔订单必须指定 `LONG` 或 `SHORT`。
+> `postOnly: true` 表示若订单会立即成交则被拒绝（防止意外以市价成交）。
+
+预览响应 — 记录 `submitToken`，下一步使用：
 
 ```json
 {
@@ -202,9 +206,11 @@ rapidx order place-preview --input '{
 
 ```bash
 # 2. 提交 — 带原始参数 + previewId + continueConsentId
+#    continueConsentId = 上一步预览响应中的 submitToken 值
 rapidx order place --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "60000",
   "quantity": "0.001",

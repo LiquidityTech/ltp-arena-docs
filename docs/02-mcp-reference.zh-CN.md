@@ -160,6 +160,7 @@ rapidx account balance --input '{"mode":"account"}' --json     # 需要 account 
 
 | CLI | MCP 工具 |
 |-----|---------|
+| `rapidx order preview` | `rapidx/order/preview` |
 | `rapidx order place-preview` | `rapidx/order/place-preview` |
 | `rapidx order place` | `rapidx/order/place` |
 | `rapidx order amend-preview` | `rapidx/order/amend-preview` |
@@ -175,6 +176,7 @@ rapidx account balance --input '{"mode":"account"}' --json     # 需要 account 
 rapidx order place-preview --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "65000",
   "quantity": "0.001",
@@ -183,10 +185,11 @@ rapidx order place-preview --input '{
   "postOnly": true
 }' --json
 
-# 提交
+# 提交 — continueConsentId = 预览响应中的 submitToken 值
 rapidx order place --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "65000",
   "quantity": "0.001",
@@ -248,6 +251,11 @@ rapidx trade preview --input '{
 ```
 
 ### 实盘验证
+
+| CLI | MCP 工具 |
+|-----|---------|
+| `rapidx trade verify-live` | `rapidx/trade/verify-live` |
+| `rapidx self-check trade-verify` | — | *（CLI 兼容别名，等同于 verify-live）* |
 
 ```bash
 rapidx trade verify-live --input '{

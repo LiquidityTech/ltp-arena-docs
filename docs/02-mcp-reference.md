@@ -173,6 +173,7 @@ All order writes require preview.
 
 | CLI | MCP tool |
 |-----|----------|
+| `rapidx order preview` | `rapidx/order/preview` |
 | `rapidx order place-preview` | `rapidx/order/place-preview` |
 | `rapidx order place` | `rapidx/order/place` |
 | `rapidx order amend-preview` | `rapidx/order/amend-preview` |
@@ -183,6 +184,8 @@ All order writes require preview.
 | `rapidx order list` | `rapidx/order/list` |
 | `rapidx order history` | `rapidx/order/history` |
 
+> `rapidx order preview` / `rapidx/order/preview` is a general order preview entry point. `rapidx order place-preview` / `amend-preview` / `cancel-preview` are operation-specific and internally route through the same preview engine.
+
 **Place order:**
 
 ```bash
@@ -190,6 +193,7 @@ All order writes require preview.
 rapidx order place-preview --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "65000",
   "quantity": "0.001",
@@ -198,10 +202,11 @@ rapidx order place-preview --input '{
   "postOnly": true
 }' --json
 
-# Submit
+# Submit — use the submitToken from the preview response as continueConsentId
 rapidx order place --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "65000",
   "quantity": "0.001",
@@ -296,6 +301,7 @@ TPSL and entire-close-position algo orders may use `MARKET` execution — this i
 | CLI | MCP tool |
 |-----|----------|
 | `rapidx trade verify-live` | `rapidx/trade/verify-live` |
+| `rapidx self-check trade-verify` | — | *(CLI compatibility alias for `verify-live`)* |
 
 Requires explicit user consent. Submits a real post-only limit order, then queries, amends, cancels, and verifies cleanup.
 

@@ -114,7 +114,7 @@ For exec-only agents and shell scripts. No MCP required.
 
 ```bash
 rapidx market get-ticker --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx account balance --input '{"mode":"portfolio"}' --json
+rapidx account balance --input '{"mode":"portfolio"}' --json   # "portfolio" = competition account type
 rapidx order list --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 ```
 
@@ -178,6 +178,7 @@ All write operations follow **preview → submit**. The preview validates tradin
 rapidx order place-preview --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "60000",
   "quantity": "0.001",
@@ -187,7 +188,10 @@ rapidx order place-preview --input '{
 }' --json
 ```
 
-Preview response:
+> `positionSide` is **required** — competition accounts default to `BOTH` (hedge) mode, which requires `LONG` or `SHORT` on every order.
+> `postOnly: true` means the order will be rejected if it would immediately fill (protects against accidental market execution).
+
+Preview response — copy `submitToken` for the next step:
 
 ```json
 {
@@ -202,9 +206,11 @@ Preview response:
 
 ```bash
 # 2. Submit — same params + previewId + continueConsentId
+#    continueConsentId = the submitToken value from the preview response above
 rapidx order place --input '{
   "symbol": "BINANCE_PERP_BTC_USDT",
   "side": "BUY",
+  "positionSide": "LONG",
   "orderType": "LIMIT",
   "price": "60000",
   "quantity": "0.001",

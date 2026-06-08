@@ -109,6 +109,7 @@ All MCP tools use the `rapidx/` prefix.
 
 | CLI | MCP tool |
 |-----|----------|
+| `rapidx order preview` | `rapidx/order/preview` |
 | `rapidx order place-preview` | `rapidx/order/place-preview` |
 | `rapidx order place` | `rapidx/order/place` |
 | `rapidx order amend-preview` | `rapidx/order/amend-preview` |
@@ -144,7 +145,7 @@ All MCP tools use the `rapidx/` prefix.
 | `rapidx trade preview` | `rapidx/trade/preview` |
 | `rapidx trade verify-live` | `rapidx/trade/verify-live` |
 
-Full input/output specifications: [`rapidx-api.md`](./rapidx-api.md).
+Full input/output specifications: [`02-mcp-reference.md`](./02-mcp-reference.md).
 
 ---
 
