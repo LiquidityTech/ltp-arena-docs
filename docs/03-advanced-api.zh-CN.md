@@ -4,9 +4,13 @@
 
 **大多数参赛者应使用 CLI 或 MCP** — 见 [`01-quickstart.zh-CN.md`](./01-quickstart.zh-CN.md)。本文档适用于需要直接 HTTP 或 WebSocket 访问的场景：对性能要求极高的交易机器人、非 Node.js 语言环境、或自定义工具链。
 
+官方 API 文档：<https://apidocliquidity.readme.io/reference/get-account-list>
+
 ---
 
 ## 认证
+
+[官方文档 →](https://apidocliquidity.readme.io/reference/authentication)
 
 ### REST 必填 Header
 
@@ -61,28 +65,28 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 
 ### 账户与资产
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/v1/trading/account` | 各交易所账户概览 |
-| GET | `/api/v1/trading/portfolio/assets` | 投资组合资产明细 |
-| GET | `/api/v1/trading/user/tradingStats` | 交易统计（需 `begin`、`end` 参数） |
-| GET | `/api/v1/trading/userFeeRate` | Maker/Taker 费率 |
+| 方法 | 路径 | 说明 | 文档 |
+|------|------|------|------|
+| GET | `/api/v1/trading/account` | 各交易所账户概览 | [官方文档 →](https://apidocliquidity.readme.io/reference/get-portfolio-overview) |
+| GET | `/api/v1/trading/portfolio/assets` | 投资组合资产明细 | [官方文档 →](https://apidocliquidity.readme.io/reference/get-portfolio-assets-details) |
+| GET | `/api/v1/trading/user/tradingStats` | 交易统计（需 `begin`、`end` 参数） | [官方文档 →](https://apidocliquidity.readme.io/reference/query-user-tradingstats) |
+| GET | `/api/v1/trading/userFeeRate` | Maker/Taker 费率 | [官方文档 →](https://apidocliquidity.readme.io/reference/user-trading-fee-rate) |
 
 ### 订单
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/v1/trading/order` | 下单 |
-| PUT | `/api/v1/trading/order` | 改单 |
-| DELETE | `/api/v1/trading/order` | 撤单 |
-| DELETE | `/api/v1/trading/cancelAll` | 批量撤单（`sym` 或 `exchangeType`） |
-| GET | `/api/v1/trading/order` | 查询单笔订单 |
-| GET | `/api/v1/trading/orders` | 当前挂单列表 |
-| GET | `/api/v1/trading/history/orders` | 历史订单（`sym` 可选） |
-| GET | `/api/v1/trading/archive/history/orders` | 归档历史订单 |
-| GET | `/api/v1/trading/executions` | 成交记录 |
-| GET | `/api/v1/trading/executions/pageable` | 分页成交记录 |
-| GET | `/api/v1/trading/statement` | 交易账单 |
+| 方法 | 路径 | 说明 | 文档 |
+|------|------|------|------|
+| POST | `/api/v1/trading/order` | 下单 | [官方文档 →](https://apidocliquidity.readme.io/reference/place-order) |
+| PUT | `/api/v1/trading/order` | 改单 | [官方文档 →](https://apidocliquidity.readme.io/reference/replace-order) |
+| DELETE | `/api/v1/trading/order` | 撤单 | [官方文档 →](https://apidocliquidity.readme.io/reference/cancel-order) |
+| DELETE | `/api/v1/trading/cancelAll` | 批量撤单（`sym` 或 `exchangeType`） | [官方文档 →](https://apidocliquidity.readme.io/reference/cancel-one-portfolio-orders) |
+| GET | `/api/v1/trading/order` | 查询单笔订单 | [官方文档 →](https://apidocliquidity.readme.io/reference/query-order) |
+| GET | `/api/v1/trading/orders` | 当前挂单列表 | [官方文档 →](https://apidocliquidity.readme.io/reference/current-open-orders) |
+| GET | `/api/v1/trading/history/orders` | 历史订单（`sym` 可选） | [官方文档 →](https://apidocliquidity.readme.io/reference/order-history) |
+| GET | `/api/v1/trading/archive/history/orders` | 归档历史订单 | [官方文档 →](https://apidocliquidity.readme.io/reference/order-history-archive) |
+| GET | `/api/v1/trading/executions` | 成交记录 | [官方文档 →](https://apidocliquidity.readme.io/reference/query-transactions) |
+| GET | `/api/v1/trading/executions/pageable` | 分页成交记录 | [官方文档 →](https://apidocliquidity.readme.io/reference/query-transactions-pageable) |
+| GET | `/api/v1/trading/statement` | 交易账单 | [官方文档 →](https://apidocliquidity.readme.io/reference/query-statement) |
 
 **下单字段：**
 
@@ -101,27 +105,27 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 
 ### 仓位
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/v1/trading/position` | 当前持仓（`sym`、`exchange` 可选） |
-| GET | `/api/v1/trading/history/position` | 历史持仓 |
-| DELETE | `/api/v1/trading/position` | 平仓（`sym`、`positionSide`） |
-| DELETE | `/api/v1/trading/positions` | 批量平仓（`exchangeType`、`closeAllPos:"true"`） |
-| GET | `/api/v1/trading/perp/leverage` | 查询杠杆 |
-| POST | `/api/v1/trading/position/leverage` | 设置杠杆（`sym`、`leverage`） |
-| GET | `/api/v1/adl/rank` | ADL 排名 |
+| 方法 | 路径 | 说明 | 文档 |
+|------|------|------|------|
+| GET | `/api/v1/trading/position` | 当前持仓（`sym`、`exchange` 可选） | [官方文档 →](https://apidocliquidity.readme.io/reference/query-portfolio-position) |
+| GET | `/api/v1/trading/history/position` | 历史持仓 | [官方文档 →](https://apidocliquidity.readme.io/reference/query-portfolio-history-position) |
+| DELETE | `/api/v1/trading/position` | 平仓（`sym`、`positionSide`） | [官方文档 →](https://apidocliquidity.readme.io/reference/close-position) |
+| DELETE | `/api/v1/trading/positions` | 批量平仓（`exchangeType`、`closeAllPos:"true"`） | [官方文档 →](https://apidocliquidity.readme.io/reference/close-positions) |
+| GET | `/api/v1/trading/perp/leverage` | 查询杠杆 | [官方文档 →](https://apidocliquidity.readme.io/reference/get-perp-leverage) |
+| POST | `/api/v1/trading/position/leverage` | 设置杠杆（`sym`、`leverage`） | [官方文档 →](https://apidocliquidity.readme.io/reference/set-leverage) |
+| GET | `/api/v1/adl/rank` | ADL 排名 | [官方文档 →](https://apidocliquidity.readme.io/reference/query-adl-rank) |
 
 ### 行情数据（RapidX）
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/v1/trading/sym/info` | 品种规则（`sym` 可选） |
-| GET | `/api/v1/market/fundingRate` | 资金费率（`sym` 必填） |
-| GET | `/api/v1/market/markPrice` | 标记价格（`sym` 可选） |
-| GET | `/api/v1/trading/positionBracket` | 仓位梯度 |
-| GET | `/api/v1/trading/loan/info` | 借贷信息 |
-| GET | `/api/v1/trading/coin/discount` | 币种折扣率 |
-| GET | `/api/v1/trading/margin/leverage` | 保证金杠杆 |
+| 方法 | 路径 | 说明 | 文档 |
+|------|------|------|------|
+| GET | `/api/v1/trading/sym/info` | 品种规则（`sym` 可选） | [官方文档 →](https://apidocliquidity.readme.io/reference/sym-info) |
+| GET | `/api/v1/market/fundingRate` | 资金费率（`sym` 必填） | [官方文档 →](https://apidocliquidity.readme.io/reference/get-current-fundingfee) |
+| GET | `/api/v1/market/markPrice` | 标记价格（`sym` 可选） | [官方文档 →](https://apidocliquidity.readme.io/reference/get-current-markprice) |
+| GET | `/api/v1/trading/positionBracket` | 仓位梯度 | [官方文档 →](https://apidocliquidity.readme.io/reference/positionbracket) |
+| GET | `/api/v1/trading/loan/info` | 借贷信息 | [官方文档 →](https://apidocliquidity.readme.io/reference/get-loan-tier) |
+| GET | `/api/v1/trading/coin/discount` | 币种折扣率 | [官方文档 →](https://apidocliquidity.readme.io/reference/get-discount-rate-detail) |
+| GET | `/api/v1/trading/margin/leverage` | 保证金杠杆 | [官方文档 →](https://apidocliquidity.readme.io/reference/get-margin-leverage) |
 
 ### REST 响应格式
 
@@ -133,13 +137,15 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 }
 ```
 
-`code: 200000` 表示成功，其他值为错误码。
+`code: 200000` 表示成功，其他值为错误码。[错误码参考 →](https://apidocliquidity.readme.io/reference/error-codes)
 
 ---
 
 ## WebSocket
 
 ### 私有 WebSocket（交易与账户事件）
+
+[用户数据流概览 →](https://apidocliquidity.readme.io/reference/ws-user-data-overview)
 
 **URL：** `wss://wss-uat.liquiditytech.com/v1/private`
 
@@ -164,13 +170,20 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 
 **订单操作：**
 
+| Action | 文档 |
+|--------|------|
+| `place_order` | [官方文档 →](https://apidocliquidity.readme.io/reference/ws-place-order) |
+| `replace_order` | [官方文档 →](https://apidocliquidity.readme.io/reference/ws-replace-order) |
+| `cancel_order` | [官方文档 →](https://apidocliquidity.readme.io/reference/ws-cancel-order) |
+| `cancel_orders` | [官方文档 →](https://apidocliquidity.readme.io/reference/ws-cancel-orders) |
+
 ```json
 { "id": "p1", "action": "place_order",  "args": { ... } }
 { "id": "a1", "action": "replace_order","args": { "orderId": "...", "replacePrice": "64000" } }
 { "id": "c1", "action": "cancel_order", "args": { "orderId": "..." } }
 ```
 
-**Orders 推送频道**（登录后自动订阅）：
+**Orders 推送频道** — 登录后自动订阅。[用户数据流详情 →](https://apidocliquidity.readme.io/reference/ws-user-data-orders-trades-assets-positions)
 
 ```json
 {
@@ -188,6 +201,8 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 心跳：每 15 秒发送 `"ping"`，服务端回复 `"pong"`。
 
 ### 行情 WebSocket
+
+[行情数据概览 →](https://apidocliquidity.readme.io/reference/market-data-overview)
 
 **URL：** `wss://mds-uat.liquiditytech.com/marketdata/v2/public`
 
@@ -216,18 +231,18 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 
 **可用频道：**
 
-| 频道 | 频率 | 适用范围 |
-|------|------|---------|
-| `BBO` | 价格变化时 | 全部 |
-| `TICKER` | 2000 ms | 全部 |
-| `TRADE` | 实时 | 全部 |
-| `ORDER_BOOK` | 250 ms | 全部 |
-| `KLINE` | 实时 | 全部 |
-| `MARK_PRICE` | 实时 | 仅永续 |
-| `INDEX_PRICE` | 实时 | 仅永续 |
-| `MARK_PRICE_KLINE` | 实时 | 仅永续 |
-| `INDEX_KLINE` | 实时 | 仅永续 |
-| `OPEN_INTEREST` | 持仓变化时 | 仅永续 |
+| 频道 | 频率 | 适用范围 | 文档 |
+|------|------|---------|------|
+| `BBO` | 价格变化时 | 全部 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-bbo) |
+| `TICKER` | 2000 ms | 全部 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-ticker) |
+| `TRADE` | 实时 | 全部 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-trade) |
+| `ORDER_BOOK` | 250 ms | 全部 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-order-book) |
+| `KLINE` | 实时 | 全部 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-kline-candlestick) |
+| `MARK_PRICE` | 实时 | 仅永续 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-price) |
+| `INDEX_PRICE` | 实时 | 仅永续 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-price) |
+| `MARK_PRICE_KLINE` | 实时 | 仅永续 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-kline-candlestick) |
+| `INDEX_KLINE` | 实时 | 仅永续 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-kline-candlestick) |
+| `OPEN_INTEREST` | 持仓变化时 | 仅永续 | [官方文档 →](https://apidocliquidity.readme.io/reference/market-data-open-interest) |
 
 心跳：每 20 秒发送 `{ "ping": <timestamp_ms> }`，服务端回复 `{ "pong": <timestamp_ms> }`。
 
@@ -250,6 +265,8 @@ Base URL：主办方提供的 `LTP_API_HOST` 值。
 ---
 
 ## 常见错误码
+
+[完整错误码参考 →](https://apidocliquidity.readme.io/reference/error-codes)
 
 ### REST
 

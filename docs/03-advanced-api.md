@@ -4,9 +4,13 @@
 
 **Most participants should use the CLI or MCP** — see [`01-quickstart.md`](./01-quickstart.md). This document is for cases where you need direct HTTP or WebSocket access: performance-critical bots, languages without Node.js, or custom tooling.
 
+Official API docs: <https://apidocliquidity.readme.io/reference/get-account-list>
+
 ---
 
 ## Authentication
+
+[Official docs →](https://apidocliquidity.readme.io/reference/authentication)
 
 ### Required Headers (REST)
 
@@ -61,28 +65,28 @@ Base URL: the `LTP_API_HOST` value provided by the organizer.
 
 ### Account & Assets
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/v1/trading/account` | Account overview per exchange |
-| GET | `/api/v1/trading/portfolio/assets` | Portfolio asset breakdown |
-| GET | `/api/v1/trading/user/tradingStats` | Trading statistics (`begin`, `end` params) |
-| GET | `/api/v1/trading/userFeeRate` | Maker/Taker fee rates |
+| Method | Path | Description | Docs |
+|--------|------|-------------|------|
+| GET | `/api/v1/trading/account` | Account overview per exchange | [→](https://apidocliquidity.readme.io/reference/get-portfolio-overview) |
+| GET | `/api/v1/trading/portfolio/assets` | Portfolio asset breakdown | [→](https://apidocliquidity.readme.io/reference/get-portfolio-assets-details) |
+| GET | `/api/v1/trading/user/tradingStats` | Trading statistics (`begin`, `end` params) | [→](https://apidocliquidity.readme.io/reference/query-user-tradingstats) |
+| GET | `/api/v1/trading/userFeeRate` | Maker/Taker fee rates | [→](https://apidocliquidity.readme.io/reference/user-trading-fee-rate) |
 
 ### Orders
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/v1/trading/order` | Place order |
-| PUT | `/api/v1/trading/order` | Amend order |
-| DELETE | `/api/v1/trading/order` | Cancel order |
-| DELETE | `/api/v1/trading/cancelAll` | Cancel all orders (`sym` or `exchangeType`) |
-| GET | `/api/v1/trading/order` | Get single order (`orderId` or `clientOrderId`) |
-| GET | `/api/v1/trading/orders` | List open orders |
-| GET | `/api/v1/trading/history/orders` | Order history (`sym` optional) |
-| GET | `/api/v1/trading/archive/history/orders` | Archived order history |
-| GET | `/api/v1/trading/executions` | Execution records |
-| GET | `/api/v1/trading/executions/pageable` | Pageable executions |
-| GET | `/api/v1/trading/statement` | Trading statement |
+| Method | Path | Description | Docs |
+|--------|------|-------------|------|
+| POST | `/api/v1/trading/order` | Place order | [→](https://apidocliquidity.readme.io/reference/place-order) |
+| PUT | `/api/v1/trading/order` | Amend order | [→](https://apidocliquidity.readme.io/reference/replace-order) |
+| DELETE | `/api/v1/trading/order` | Cancel order | [→](https://apidocliquidity.readme.io/reference/cancel-order) |
+| DELETE | `/api/v1/trading/cancelAll` | Cancel all orders (`sym` or `exchangeType`) | [→](https://apidocliquidity.readme.io/reference/cancel-one-portfolio-orders) |
+| GET | `/api/v1/trading/order` | Get single order (`orderId` or `clientOrderId`) | [→](https://apidocliquidity.readme.io/reference/query-order) |
+| GET | `/api/v1/trading/orders` | List open orders | [→](https://apidocliquidity.readme.io/reference/current-open-orders) |
+| GET | `/api/v1/trading/history/orders` | Order history (`sym` optional) | [→](https://apidocliquidity.readme.io/reference/order-history) |
+| GET | `/api/v1/trading/archive/history/orders` | Archived order history | [→](https://apidocliquidity.readme.io/reference/order-history-archive) |
+| GET | `/api/v1/trading/executions` | Execution records | [→](https://apidocliquidity.readme.io/reference/query-transactions) |
+| GET | `/api/v1/trading/executions/pageable` | Pageable executions | [→](https://apidocliquidity.readme.io/reference/query-transactions-pageable) |
+| GET | `/api/v1/trading/statement` | Trading statement | [→](https://apidocliquidity.readme.io/reference/query-statement) |
 
 **Place order fields:**
 
@@ -101,27 +105,27 @@ Base URL: the `LTP_API_HOST` value provided by the organizer.
 
 ### Positions
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/v1/trading/position` | Open positions (`sym`, `exchange` optional) |
-| GET | `/api/v1/trading/history/position` | Position history |
-| DELETE | `/api/v1/trading/position` | Close position (`sym`, `positionSide`) |
-| DELETE | `/api/v1/trading/positions` | Close all positions (`exchangeType`, `closeAllPos:"true"`) |
-| GET | `/api/v1/trading/perp/leverage` | Get leverage (`sym` or `exchange` optional) |
-| POST | `/api/v1/trading/position/leverage` | Set leverage (`sym`, `leverage`) |
-| GET | `/api/v1/adl/rank` | ADL rank (`sym` optional) |
+| Method | Path | Description | Docs |
+|--------|------|-------------|------|
+| GET | `/api/v1/trading/position` | Open positions (`sym`, `exchange` optional) | [→](https://apidocliquidity.readme.io/reference/query-portfolio-position) |
+| GET | `/api/v1/trading/history/position` | Position history | [→](https://apidocliquidity.readme.io/reference/query-portfolio-history-position) |
+| DELETE | `/api/v1/trading/position` | Close position (`sym`, `positionSide`) | [→](https://apidocliquidity.readme.io/reference/close-position) |
+| DELETE | `/api/v1/trading/positions` | Close all positions (`exchangeType`, `closeAllPos:"true"`) | [→](https://apidocliquidity.readme.io/reference/close-positions) |
+| GET | `/api/v1/trading/perp/leverage` | Get leverage (`sym` or `exchange` optional) | [→](https://apidocliquidity.readme.io/reference/get-perp-leverage) |
+| POST | `/api/v1/trading/position/leverage` | Set leverage (`sym`, `leverage`) | [→](https://apidocliquidity.readme.io/reference/set-leverage) |
+| GET | `/api/v1/adl/rank` | ADL rank (`sym` optional) | [→](https://apidocliquidity.readme.io/reference/query-adl-rank) |
 
 ### Market Data (RapidX)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/v1/trading/sym/info` | Symbol rules (`sym` optional) |
-| GET | `/api/v1/market/fundingRate` | Funding rate (`sym` required) |
-| GET | `/api/v1/market/markPrice` | Mark price (`sym` optional) |
-| GET | `/api/v1/trading/positionBracket` | Position tier/bracket |
-| GET | `/api/v1/trading/loan/info` | Loan info |
-| GET | `/api/v1/trading/coin/discount` | Coin discount rate |
-| GET | `/api/v1/trading/margin/leverage` | Margin leverage |
+| Method | Path | Description | Docs |
+|--------|------|-------------|------|
+| GET | `/api/v1/trading/sym/info` | Symbol rules (`sym` optional) | [→](https://apidocliquidity.readme.io/reference/sym-info) |
+| GET | `/api/v1/market/fundingRate` | Funding rate (`sym` required) | [→](https://apidocliquidity.readme.io/reference/get-current-fundingfee) |
+| GET | `/api/v1/market/markPrice` | Mark price (`sym` optional) | [→](https://apidocliquidity.readme.io/reference/get-current-markprice) |
+| GET | `/api/v1/trading/positionBracket` | Position tier/bracket | [→](https://apidocliquidity.readme.io/reference/positionbracket) |
+| GET | `/api/v1/trading/loan/info` | Loan info | [→](https://apidocliquidity.readme.io/reference/get-loan-tier) |
+| GET | `/api/v1/trading/coin/discount` | Coin discount rate | [→](https://apidocliquidity.readme.io/reference/get-discount-rate-detail) |
+| GET | `/api/v1/trading/margin/leverage` | Margin leverage | [→](https://apidocliquidity.readme.io/reference/get-margin-leverage) |
 
 ### REST Response Format
 
@@ -133,13 +137,15 @@ Base URL: the `LTP_API_HOST` value provided by the organizer.
 }
 ```
 
-`code: 200000` = success. Any other value is an error.
+`code: 200000` = success. Any other value is an error. [Error codes →](https://apidocliquidity.readme.io/reference/error-codes)
 
 ---
 
 ## WebSocket
 
 ### Private WebSocket (Trading + Account Events)
+
+[User Data Streams overview →](https://apidocliquidity.readme.io/reference/ws-user-data-overview)
 
 **URL:** `wss://wss-uat.liquiditytech.com/v1/private`
 
@@ -164,13 +170,20 @@ Base URL: the `LTP_API_HOST` value provided by the organizer.
 
 **Order actions:**
 
+| Action | Docs |
+|--------|------|
+| `place_order` | [→](https://apidocliquidity.readme.io/reference/ws-place-order) |
+| `replace_order` | [→](https://apidocliquidity.readme.io/reference/ws-replace-order) |
+| `cancel_order` | [→](https://apidocliquidity.readme.io/reference/ws-cancel-order) |
+| `cancel_orders` | [→](https://apidocliquidity.readme.io/reference/ws-cancel-orders) |
+
 ```json
 { "id": "p1", "action": "place_order",  "args": { ... } }
 { "id": "a1", "action": "replace_order","args": { "orderId": "...", "replacePrice": "64000" } }
 { "id": "c1", "action": "cancel_order", "args": { "orderId": "..." } }
 ```
 
-**Orders push channel** (auto-subscribed after login):
+**Orders push channel** — auto-subscribed after login. [User data streams →](https://apidocliquidity.readme.io/reference/ws-user-data-orders-trades-assets-positions)
 
 ```json
 {
@@ -188,6 +201,8 @@ Base URL: the `LTP_API_HOST` value provided by the organizer.
 Keepalive: send `"ping"` every 15 seconds; server replies `"pong"`.
 
 ### Market Data WebSocket
+
+[Market Data overview →](https://apidocliquidity.readme.io/reference/market-data-overview)
 
 **URL:** `wss://mds-uat.liquiditytech.com/marketdata/v2/public`
 
@@ -216,18 +231,18 @@ Limits are counted by **trading pair** — subscribing BBO + TICKER + TRADE for 
 
 **Available channels:**
 
-| Channel | Frequency | Scope |
-|---------|-----------|-------|
-| `BBO` | On change | All |
-| `TICKER` | 2000 ms | All |
-| `TRADE` | Real-time | All |
-| `ORDER_BOOK` | 250 ms | All |
-| `KLINE` | Real-time | All |
-| `MARK_PRICE` | Real-time | Perpetual only |
-| `INDEX_PRICE` | Real-time | Perpetual only |
-| `MARK_PRICE_KLINE` | Real-time | Perpetual only |
-| `INDEX_KLINE` | Real-time | Perpetual only |
-| `OPEN_INTEREST` | On change | Perpetual only |
+| Channel | Frequency | Scope | Docs |
+|---------|-----------|-------|------|
+| `BBO` | On change | All | [→](https://apidocliquidity.readme.io/reference/market-data-bbo) |
+| `TICKER` | 2000 ms | All | [→](https://apidocliquidity.readme.io/reference/market-data-ticker) |
+| `TRADE` | Real-time | All | [→](https://apidocliquidity.readme.io/reference/market-data-trade) |
+| `ORDER_BOOK` | 250 ms | All | [→](https://apidocliquidity.readme.io/reference/market-data-order-book) |
+| `KLINE` | Real-time | All | [→](https://apidocliquidity.readme.io/reference/market-data-kline-candlestick) |
+| `MARK_PRICE` | Real-time | Perpetual only | [→](https://apidocliquidity.readme.io/reference/market-data-price) |
+| `INDEX_PRICE` | Real-time | Perpetual only | [→](https://apidocliquidity.readme.io/reference/market-data-price) |
+| `MARK_PRICE_KLINE` | Real-time | Perpetual only | [→](https://apidocliquidity.readme.io/reference/market-data-kline-candlestick) |
+| `INDEX_KLINE` | Real-time | Perpetual only | [→](https://apidocliquidity.readme.io/reference/market-data-kline-candlestick) |
+| `OPEN_INTEREST` | On change | Perpetual only | [→](https://apidocliquidity.readme.io/reference/market-data-open-interest) |
 
 Keepalive: send `{ "ping": <timestamp_ms> }` every 20 seconds; server replies `{ "pong": <timestamp_ms> }`.
 
@@ -250,6 +265,8 @@ Channels marked "Perpetual only" reject `SPOT` symbols with error `11100`.
 ---
 
 ## Common Error Codes
+
+[Full error code reference →](https://apidocliquidity.readme.io/reference/error-codes)
 
 ### REST
 
