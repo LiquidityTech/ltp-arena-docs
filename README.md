@@ -30,13 +30,18 @@ MCP path   rapidx mcp serve  (started by the CLI, not a separate package)
 
 Reference implementation (MCP + CLI): [ltp-ai-hub / rapidx-mcp-cli](https://github.com/LiquidityTech/ltp-ai-hub/tree/main/rapidx-mcp-cli)
 
+> Check current version: `rapidx update check --json`
+
 ---
 
-### Current release
+## AI Agent Integration
 
-| Component | Version |
-|-----------|--------:|
-| RapidX CLI / MCP | `1.0.38` |
-| RapidX Skills | `1.0.13` |
-| MCP schema | `2026-05-23` |
-| Expected MCP tools | `46` |
+| File | Description |
+|------|-------------|
+| [rapidx-ai-agent-overview.md](llms-ai-docs/rapidx-ai-agent-overview.md) | Choose the right integration path for AI agents using RapidX skills, CLI, and MCP. |
+| [rapidx-agent-skills.md](llms-ai-docs/rapidx-agent-skills.md) | Install and use `ltp-rapidx-config` and `ltp-rapidx-trading` for supported agent hosts. |
+| [rapidx-cli.md](llms-ai-docs/rapidx-cli.md) | Install and use `@liquiditytech/rapidx-cli` for one-shot commands, diagnostics, schema discovery, self-check, and CLI-only agents. |
+| [rapidx-mcp.md](llms-ai-docs/rapidx-mcp.md) | Start RapidX MCP with `rapidx mcp serve`, configure MCP hosts, discover tools, and call structured RapidX tools. |
+| [rapidx-agent-best-practices.md](llms-ai-docs/rapidx-agent-best-practices.md) | Follow recommended setup, credential handling, preview-first trading, automation sessions, readback, verification, and upgrade flows. |
+| [rapidx-ai-tool-capabilities.md](llms-ai-docs/rapidx-ai-tool-capabilities.md) | Map RapidX CLI commands and MCP tools to supported capability areas and RapidX API endpoints. |
+| [rapidx-ai-troubleshooting.md](llms-ai-docs/rapidx-ai-troubleshooting.md) | Resolve common installation, PATH, MCP startup, credential, symbol, preview, automation, and readback issues. |
