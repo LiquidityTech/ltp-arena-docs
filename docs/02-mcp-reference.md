@@ -144,9 +144,9 @@ MCP config:
       "command": "rapidx",
       "args": ["mcp", "serve"],
       "env": {
-        "LTP_ACCESS_KEY": "<secret>",
-        "LTP_SECRET_KEY": "<secret>",
-        "LTP_API_HOST": "<provided-api-host>"
+        "LTP_ACCESS_KEY": "<your-access-key>",
+        "LTP_SECRET_KEY": "<your-secret-key>",
+        "LTP_API_HOST": "<host-provided-by-organizer>"
       }
     }
   }

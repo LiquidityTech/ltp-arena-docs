@@ -15,11 +15,22 @@ The two paths share the same credentials and the same underlying capabilities. Y
 
 ## Before You Begin
 
+### Account & Credentials
+
+Competition accounts are issued by the organizer at registration. Each account includes:
+- `LTP_ACCESS_KEY` and `LTP_SECRET_KEY` — your API credentials
+- `LTP_API_HOST` — the UAT API base URL (**required, no default**)
+- Initial virtual balance: **1,000 USDT** (simulation only, no real assets at risk)
+- Default position mode: `BOTH` (hedge mode)
+
+> See [`resources.md §1`](./resources.md#1-competition-account) for full account details and Track A symbol restrictions.
+
+### Software Requirements
+
 | Requirement | Details |
 |-------------|---------|
 | Node.js | **20 or later** |
 | npm | Any recent version |
-| Credentials | `LTP_ACCESS_KEY`, `LTP_SECRET_KEY`, `LTP_API_HOST` — provided by the competition organizer |
 
 `LTP_API_HOST` has no default. Missing it returns `RCORE01003`.
 
@@ -233,11 +244,12 @@ rapidx order place --input '{
 }' --json
 
 # 3. Confirm state
-rapidx order get --input '{"clientOrderId":"my-first-order"}' --json
+rapidx order query --input '{"clientOrderId":"my-first-order"}' --json
 ```
 
 > Preview and submit must use the **same runtime** (both CLI or both MCP — do not mix).
 > Preview records expire after ~5 minutes.
+> `clientOrderId` must be **unique per order** — reusing the same value on a second run will fail. Use a timestamp suffix (e.g. `"my-order-1749123456"`) for each new order.
 
 ---
 

@@ -103,46 +103,69 @@ All MCP tools use the `rapidx/` prefix.
 | `rapidx market get-symbol-info` | `rapidx/market/get-symbol-info` |
 | `rapidx market get-open-interest` | `rapidx/market/get-open-interest` |
 
-### Account
+### Portfolio
 
 | CLI | MCP tool |
 |-----|----------|
-| `rapidx account overview` | `rapidx/account/overview` |
-| `rapidx account balance` | `rapidx/account/balance` |
-| `rapidx account set-position-mode` | `rapidx/account/set-position-mode` |
+| `rapidx portfolio overview` | `rapidx/portfolio/overview` |
+| `rapidx portfolio assets` | `rapidx/portfolio/assets` |
+| `rapidx portfolio statement` | `rapidx/portfolio/statement` |
+| `rapidx portfolio user-fee-rate` | `rapidx/portfolio/user-fee-rate` |
+| `rapidx portfolio position-bracket` | `rapidx/portfolio/position-bracket` |
+| `rapidx portfolio set-position-mode` | `rapidx/portfolio/set-position-mode` |
 
 ### Orders (preview required for all writes)
 
 | CLI | MCP tool |
 |-----|----------|
-| `rapidx order preview` | `rapidx/order/preview` |
 | `rapidx order place-preview` | `rapidx/order/place-preview` |
 | `rapidx order place` | `rapidx/order/place` |
-| `rapidx order amend-preview` | `rapidx/order/amend-preview` |
-| `rapidx order amend` | `rapidx/order/amend` |
+| `rapidx order replace-preview` | `rapidx/order/replace-preview` |
+| `rapidx order replace` | `rapidx/order/replace` |
 | `rapidx order cancel-preview` | `rapidx/order/cancel-preview` |
 | `rapidx order cancel` | `rapidx/order/cancel` |
-| `rapidx order get` | `rapidx/order/get` |
-| `rapidx order list` | `rapidx/order/list` |
+| `rapidx order cancel-all` | `rapidx/order/cancel-all` |
+| `rapidx order query` | `rapidx/order/query` |
+| `rapidx order open-orders` | `rapidx/order/open-orders` |
 | `rapidx order history` | `rapidx/order/history` |
+
+### Transactions
+
+| CLI | MCP tool |
+|-----|----------|
+| `rapidx transaction executions` | `rapidx/transaction/executions` |
 
 ### Positions (preview required for writes)
 
 | CLI | MCP tool |
 |-----|----------|
-| `rapidx position list` | `rapidx/position/list` |
+| `rapidx position query` | `rapidx/position/query` |
 | `rapidx position history` | `rapidx/position/history` |
-| `rapidx position close` | `rapidx/position/close` |
+| `rapidx position get-leverage` | `rapidx/position/get-leverage` |
 | `rapidx position set-leverage` | `rapidx/position/set-leverage` |
+| `rapidx position close` | `rapidx/position/close` |
+| `rapidx position close-all` | `rapidx/position/close-all` |
 
 ### Algo Orders (preview required for writes)
 
 | CLI | MCP tool |
 |-----|----------|
-| `rapidx algo list` | `rapidx/algo/list` |
 | `rapidx algo place` | `rapidx/algo/place` |
-| `rapidx algo amend` | `rapidx/algo/amend` |
+| `rapidx algo replace` | `rapidx/algo/replace` |
 | `rapidx algo cancel` | `rapidx/algo/cancel` |
+| `rapidx algo open-orders` | `rapidx/algo/open-orders` |
+| `rapidx algo history` | `rapidx/algo/history` |
+| `rapidx algo query` | `rapidx/algo/query` |
+
+### Automation Sessions
+
+| CLI | MCP tool |
+|-----|----------|
+| `rapidx automation start` | `rapidx/automation/start` |
+| `rapidx automation list` | `rapidx/automation/list` |
+| `rapidx automation status` | `rapidx/automation/status` |
+| `rapidx automation extend` | `rapidx/automation/extend` |
+| `rapidx automation stop` | `rapidx/automation/stop` |
 
 ### Trade Utilities
 
@@ -260,7 +283,7 @@ Exact dates communicated via the organizer's official channel.
 1. **No real assets at risk** — competition runs on the UAT mock matching engine.
 2. **Preview before every write** — all writes require preview; the preview never submits a real order.
 3. **`LTP_API_HOST` is required** — missing host returns `RCORE01003`.
-4. **State confirmation after every write** — call `rapidx order get` or `rapidx position list`. No blind retries.
+4. **State confirmation after every write** — call `rapidx order query` or `rapidx position query`. No blind retries.
 5. **Secrets never leak** — keys are masked in all CLI/MCP output, logs, and reports.
 6. **Single-track competition** — all participants compete under identical conditions.
 
