@@ -2,7 +2,7 @@
 
 > Install the CLI, connect your agent, run your first trade — in under 10 minutes.
 
-RapidX CLI (`@liquiditytech/rapidx-cli` v1.0.31) provides two **independent** integration paths — choose either one or both:
+RapidX CLI (`@liquiditytech/rapidx-cli` v1.0.38) provides two **independent** integration paths — choose either one or both:
 
 | Path | How you use it | Best for |
 |------|---------------|---------|
@@ -123,11 +123,13 @@ For exec-only agents, shell scripts, Python/Java/C++ bots, CI pipelines. No MCP 
 
 ```bash
 rapidx market get-ticker --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx account balance --input '{"mode":"portfolio"}' --json   # "portfolio" = competition account type
-rapidx order list --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx portfolio overview --json       # portfolio overview (account summary)
+rapidx portfolio assets --json         # per-coin asset breakdown
+rapidx order open-orders --json        # current open orders
+rapidx position query --json           # open positions
 ```
 
-All commands return a stable JSON envelope — see [`02-mcp-reference.md`](./02-mcp-reference.md) §Response envelope.
+All commands return a stable JSON envelope. Always call `rapidx schema --json` first to get exact input schemas for the current version — see [`02-mcp-reference.md`](./02-mcp-reference.md) §CLI Reference for the full command list, automation sessions, and readback patterns.
 
 ---
 
@@ -243,7 +245,7 @@ rapidx order get --input '{"clientOrderId":"my-first-order"}' --json
 
 | Document | Contents |
 |----------|----------|
-| [`02-mcp-reference.md`](./02-mcp-reference.md) | Complete CLI + MCP tool reference, automation mode, troubleshooting |
+| [`02-mcp-reference.md`](./02-mcp-reference.md) | Complete MCP tool reference + CLI command reference, automation sessions, readback patterns, troubleshooting |
 | [`03-advanced-api.md`](./03-advanced-api.md) | Direct REST/WebSocket access for custom integrations |
 | [`resources.md`](./resources.md) | Endpoints, npm package, symbol list, schedule, support |
 

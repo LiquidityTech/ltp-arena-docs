@@ -4,22 +4,39 @@ AI Quantitative Trading Competition — official participant documentation.
 
 ## Quick Links
 
-| | English | 中文 |
-|-|---------|------|
-| **Getting started** | [01-quickstart.md](./docs/01-quickstart.md) | [01-quickstart.zh-CN.md](./docs/01-quickstart.zh-CN.md) |
-| **CLI & MCP reference** | [02-mcp-reference.md](./docs/02-mcp-reference.md) | [02-mcp-reference.zh-CN.md](./docs/02-mcp-reference.zh-CN.md) |
-| **Advanced REST & WebSocket** | [03-advanced-api.md](./docs/03-advanced-api.md) | [03-advanced-api.zh-CN.md](./docs/03-advanced-api.zh-CN.md) |
-| **Resource manifest** | [resources.md](./docs/resources.md) | [resources.zh-CN.md](./docs/resources.zh-CN.md) |
+| Document | Description |
+|----------|-------------|
+| [01-quickstart.md](./docs/01-quickstart.md) | Install CLI, connect MCP or run CLI directly, place your first order |
+| [02-mcp-reference.md](./docs/02-mcp-reference.md) | MCP and CLI reference — tools, automation sessions, readback patterns |
+| [03-advanced-api.md](./docs/03-advanced-api.md) | Direct REST & WebSocket for custom integrations |
+| [resources.md](./docs/resources.md) | Endpoints, credentials, symbols, schedule, support |
 
 ---
 
-### How the docs are organized
+### Integration paths
+
+RapidX provides two independent paths — choose either or both:
 
 ```
-01  Getting started   — install CLI, connect MCP, first order (10 min)
-02  MCP reference     — all 34 tools, automation mode, troubleshooting
-03  Advanced API      — direct REST/WebSocket for custom integrations
-    resources         — endpoints, credentials, symbols, schedule
+CLI path   rapidx <domain> <action> --input '<json>' --json
+           Works in any shell, script, or exec-capable language.
+           No agent host required.
+
+MCP path   rapidx mcp serve  (started by the CLI, not a separate package)
+           Registers as an MCP server in Claude Code / Codex / Cursor / etc.
+           Agent calls rapidx/order/place, rapidx/market/get-ticker, etc.
+           as structured tools — no shell commands in agent code.
 ```
 
-The primary path is MCP via `@liquiditytech/rapidx-cli`. Direct API access is covered in doc 03 for participants who need it.
+Reference implementation (MCP + CLI): [ltp-ai-hub / rapidx-mcp-cli](https://github.com/LiquidityTech/ltp-ai-hub/tree/main/rapidx-mcp-cli)
+
+---
+
+### Current release
+
+| Component | Version |
+|-----------|--------:|
+| RapidX CLI / MCP | `1.0.38` |
+| RapidX Skills | `1.0.13` |
+| MCP schema | `2026-05-23` |
+| Expected MCP tools | `46` |

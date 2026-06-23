@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "ltp-rapidx-config": {
+      "source": "LiquidityTech/ltp-rapidx-skill",
+      "sourceType": "github",
+      "skillPath": "skills/ltp-rapidx-config/SKILL.md",
+      "computedHash": "43474c1ad04539360425f53adc380c2c1d4573c61c75078d28a88d318e1335a6"
+    },
+    "ltp-rapidx-trading": {
+      "source": "LiquidityTech/ltp-rapidx-skill",
+      "sourceType": "github",
+      "skillPath": "skills/ltp-rapidx-trading/SKILL.md",
+      "computedHash": "c6db3433a059f6e52a11bca7dcfbc33e8490df603562a8405453d9591a8e7456"
+    }
+  }
+}

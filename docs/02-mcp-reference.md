@@ -1,13 +1,18 @@
 # RapidX CLI & MCP Reference
 
-> Complete tool reference for all 34 MCP tools and 41 CLI capabilities.
-
 CLI and MCP are **two independent integration paths** — choose either or both:
 
 - **CLI path**: call `rapidx <domain> <action> --input '...' --json` from any shell, script, or exec-capable language. No agent host required.
 - **MCP path**: register `rapidx mcp serve` as an MCP server in Claude Code, Codex, Cursor, or any MCP-capable host. Your agent calls `rapidx/order/place`, `rapidx/market/get-ticker`, etc. as structured tools — no shell commands in your agent code.
 
-Both paths use the same credentials, the same capabilities, and the same preview-then-submit safety model. The underlying executor is shared — there are no parallel implementations or behavioral differences.
+Both paths use the same credentials, the same 46 capabilities, and the same preview-then-submit safety model.
+
+| Component | Version |
+|-----------|--------:|
+| RapidX CLI / MCP | `1.0.38` |
+| RapidX Skills | `1.0.13` |
+| MCP schema | `2026-05-23` |
+| Expected MCP tools | `46` |
 
 ---
 
@@ -31,7 +36,19 @@ Every CLI command and MCP tool returns:
 }
 ```
 
-Error responses may include a `details` object: `upstreamStatus`, `upstreamCode`, `upstreamMessage`, `hint`, `attempts`.
+Failure uses the same shape:
+
+```json
+{
+  "ok": false,
+  "status": "INVALID_INPUT",
+  "code": "RCLI30001",
+  "message": "Input schema validation failed: unknown field: foo.",
+  "evidence": []
+}
+```
+
+Read `ok`, `status`, `code`, `message`, and `data`. Do not infer success from process output text alone.
 
 | Status | Meaning |
 |--------|---------|
@@ -89,7 +106,7 @@ Enable on the **preview request** (not on submit):
 Rules:
 - Pass the user's exact authorization text through `automationConsentText` — do not rewrite or broaden it.
 - `automationConsentText` must include the exact symbol and `maxNotional`.
-- The text must clearly express automation intent (`automation`, `automated`, or `自动`).
+- The text must clearly express automation intent (`automation`, `automated`).
 - Submit still requires `previewId` and `continueConsentId`; automation changes confirmation mode, not the API shape.
 
 When accepted, the preview response includes:
@@ -107,182 +124,291 @@ When accepted, the preview response includes:
 
 ---
 
-## Tool Reference
+## MCP Reference
 
-### Discovery & Diagnostics
+> **Reference implementation**: [ltp-ai-hub / rapidx-mcp-cli](https://github.com/LiquidityTech/ltp-ai-hub/tree/main/rapidx-mcp-cli)
+> — A production-quality example showing how to integrate RapidX MCP into an AI agent workflow. Uses the same `@liquiditytech/rapidx-cli` npm package; MCP is not a separate package.
 
-| CLI | MCP tool | Description |
-|-----|----------|-------------|
-| `rapidx schema --json` | `rapidx/tools` | List all capabilities, schemas, and preview requirements |
-| `rapidx self-check --read-only --json` | `rapidx/self-check` | Verify read-only connectivity |
-| `rapidx update check --json` | `rapidx/update/check` | Check release status and upgrade advice |
-| `rapidx doctor --json` | CLI only | Local diagnostics: version, credentials, invocation mode |
-| `rapidx auth check` | CLI only | Credential resolution check — no full secrets printed |
-| `rapidx invocation check` | CLI only | Verify the agent invocation uses the supported command style |
-| `rapidx config list/get/set/unset` | CLI only | Local config helpers (do not replace env vars at runtime) |
-
-### Market Data
-
-| CLI | MCP tool |
-|-----|----------|
-| `rapidx market get-ticker` | `rapidx/market/get-ticker` |
-| `rapidx market get-orderbook` | `rapidx/market/get-orderbook` |
-| `rapidx market get-klines` | `rapidx/market/get-klines` |
-| `rapidx market get-open-interest` | `rapidx/market/get-open-interest` |
-| `rapidx market get-funding-rate` | `rapidx/market/get-funding-rate` |
-| `rapidx market get-mark-price` | `rapidx/market/get-mark-price` |
-| `rapidx market get-symbol-info` | `rapidx/market/get-symbol-info` |
-
-**Key inputs:**
+Start the server:
 
 ```bash
-# symbol required
-rapidx market get-ticker        --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx market get-open-interest --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-
-# level optional (5/10/20/50/100, default 20)
-rapidx market get-orderbook     --input '{"symbol":"BINANCE_PERP_BTC_USDT","level":20}' --json
-
-# interval optional (1m/5m/15m/30m/1h/4h/1d, default 1h); limit default 100
-rapidx market get-klines        --input '{"symbol":"BINANCE_PERP_BTC_USDT","interval":"1h","limit":100}' --json
-
-# symbol optional; omit to return all
-rapidx market get-funding-rate  --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx market get-mark-price    --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx market get-symbol-info   --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx mcp serve
 ```
 
-### Account
+MCP config:
 
-| CLI | MCP tool |
-|-----|----------|
-| `rapidx account overview` | `rapidx/account/overview` |
-| `rapidx account balance` | `rapidx/account/balance` |
-| `rapidx account set-position-mode` | `rapidx/account/set-position-mode` |
+```json
+{
+  "mcpServers": {
+    "rapidx": {
+      "command": "rapidx",
+      "args": ["mcp", "serve"],
+      "env": {
+        "LTP_ACCESS_KEY": "<secret>",
+        "LTP_SECRET_KEY": "<secret>",
+        "LTP_API_HOST": "<provided-api-host>"
+      }
+    }
+  }
+}
+```
+
+If the agent host cannot resolve `rapidx`, set `command` to the absolute path from `which rapidx`.
+
+### Schema Discovery
+
+After startup, agents should call `rapidx/tools` first:
+
+```text
+rapidx/tools
+```
+
+Response structure:
+
+```json
+{
+  "schemaVersion": "2026-05-23",
+  "inputSchemas": { "PreviewOrderInput": { ... }, ... },
+  "tools": [
+    {
+      "name": "rapidx/order/place-preview",
+      "riskLevel": "trade-write",
+      "inputSchema": "PreviewOrderInput",
+      "outputSchema": "PreviewOrderResult",
+      "previewRequired": false,
+      "containsRealOrder": false,
+      "requiresExplicitHumanConfirmation": false
+    }
+  ]
+}
+```
+
+To construct a tool input:
+1. Find the tool by `name`.
+2. Read its `inputSchema`.
+3. Look up that schema in `inputSchemas`.
+4. Send only fields allowed by the schema.
+
+### MCP Tool Groups
+
+#### Discovery & Diagnostics
+
+| MCP tool | Description |
+|----------|-------------|
+| `rapidx/tools` | Discover tool surface, schemas, and risk levels |
+| `rapidx/self-check` | Read-only integration self-check |
+| `rapidx/update/check` | Check CLI, MCP schema, and skills version status |
+
+#### Market
+
+| MCP tool |
+|----------|
+| `rapidx/market/get-ticker` |
+| `rapidx/market/get-orderbook` |
+| `rapidx/market/get-klines` |
+| `rapidx/market/get-funding-rate` |
+| `rapidx/market/get-mark-price` |
+| `rapidx/market/get-symbol-info` |
+| `rapidx/market/get-open-interest` |
+
+#### Portfolio
+
+| MCP tool | RapidX API |
+|----------|-----------|
+| `rapidx/portfolio/overview` | `GET /api/v1/trading/account` |
+| `rapidx/portfolio/assets` | `GET /api/v1/trading/portfolio/assets` |
+| `rapidx/portfolio/statement` | `GET /api/v1/trading/statement` |
+| `rapidx/portfolio/user-fee-rate` | `GET /api/v1/trading/userFeeRate` |
+| `rapidx/portfolio/position-bracket` | `GET /api/v1/trading/positionBracket` |
+| `rapidx/portfolio/set-position-mode` | `POST /api/v1/trading/account` |
+
+#### Orders (preview required for writes)
+
+| MCP tool | Purpose |
+|----------|---------|
+| `rapidx/order/place-preview` | Preview — validates symbol rules, notional, lot size |
+| `rapidx/order/place` | Submit place |
+| `rapidx/order/replace-preview` | Preview — reads back order before returning token |
+| `rapidx/order/replace` | Submit replace |
+| `rapidx/order/cancel-preview` | Preview — reads back order before returning token |
+| `rapidx/order/cancel` | Submit cancel |
+| `rapidx/order/cancel-all` | Cancel all open orders |
+| `rapidx/order/query` | Get single order |
+| `rapidx/order/open-orders` | List open orders |
+| `rapidx/order/history` | Order history |
+
+#### Transactions
+
+| MCP tool | RapidX API |
+|----------|-----------|
+| `rapidx/transaction/executions` | `GET /api/v1/trading/executions` |
+
+#### Positions (preview required for writes)
+
+| MCP tool | RapidX API |
+|----------|-----------|
+| `rapidx/position/query` | `GET /api/v1/trading/position` |
+| `rapidx/position/history` | `GET /api/v1/trading/history/position` |
+| `rapidx/position/get-leverage` | `GET /api/v1/trading/perp/leverage` |
+| `rapidx/position/set-leverage` | `POST /api/v1/trading/position/leverage` |
+| `rapidx/position/close` | `DELETE /api/v1/trading/position` |
+| `rapidx/position/close-all` | `DELETE /api/v1/trading/positions` |
+
+#### Algo Orders (preview required for writes)
+
+| MCP tool | RapidX API |
+|----------|-----------|
+| `rapidx/algo/place` | `POST /api/v1/algo/order` |
+| `rapidx/algo/replace` | `PUT /api/v1/algo/order` |
+| `rapidx/algo/cancel` | `DELETE /api/v1/algo/order` |
+| `rapidx/algo/open-orders` | `GET /api/v1/algo/openOrders` |
+| `rapidx/algo/history` | `GET /api/v1/algo/history/orders` |
+| `rapidx/algo/query` | `GET /api/v1/algo/order` |
+
+#### Automation Sessions
+
+Automation sessions let a user authorize an agent to trade within a bounded scope without per-order chat confirmation. Preview is still required on every write — the session replaces the per-order chat approval, not the preview step.
+
+| MCP tool | Purpose |
+|----------|---------|
+| `rapidx/automation/start` | Start a session with scope (symbols, notional, duration, allowed actions) |
+| `rapidx/automation/list` | List active sessions |
+| `rapidx/automation/status` | Read session status and usage |
+| `rapidx/automation/extend` | Extend session expiry (requires user consent) |
+| `rapidx/automation/stop` | Stop a session |
+
+Pass `automationSessionId` into preview tools to bind a write to the active session.
+
+#### Trade Utilities
+
+| MCP tool | Purpose |
+|----------|---------|
+| `rapidx/trade/preview` | Generic preview for capabilities without a dedicated preview tool |
+| `rapidx/trade/verify-live` | Explicit small real-trade verification (requires user consent) |
+
+Use concrete preview tools (`rapidx/order/place-preview`, etc.) for normal order workflows — not `rapidx/trade/preview`.
+
+---
+
+## CLI Reference
+
+### Schema Discovery
 
 ```bash
-rapidx account overview --json
-rapidx account balance --input '{"mode":"portfolio"}' --json   # portfolio-scoped credentials
-rapidx account balance --input '{"mode":"account"}' --json     # account-level credentials required
+rapidx schema --json
 ```
 
-`mode:"account"` with portfolio-scoped credentials returns `PERMISSION_SCOPE_ERROR`.
+Response contains `data.schemaVersion`, `data.capabilities[]`, and `data.inputSchemas`. Each capability entry:
 
-`set-position-mode` is a write operation — use `rapidx trade preview` with `targetCapabilityId: "account.set-position-mode"` first.
+```json
+{
+  "capabilityId": "order.place-preview",
+  "cliCommand": "rapidx order place-preview",
+  "mcpTool": "rapidx/order/place-preview",
+  "inputSchema": "PreviewOrderInput",
+  "outputSchema": "PreviewOrderResult",
+  "previewRequired": false
+}
+```
+
+Use the schema to construct `--input` JSON. The live schema from `rapidx schema --json` is authoritative — never hard-code input shapes.
+
+### Diagnostics
+
+```bash
+rapidx --version
+rapidx schema --json              # discover capabilities and input schemas
+rapidx auth check --json          # credential resolution check
+rapidx doctor --json              # local diagnostics
+rapidx update check --json        # CLI, MCP schema, and skills version check
+rapidx self-check --json          # read-only integration self-check
+```
+
+### Market
+
+```bash
+rapidx market get-ticker         --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx market get-orderbook      --input '{"symbol":"BINANCE_PERP_BTC_USDT","level":20}' --json
+rapidx market get-klines         --input '{"symbol":"BINANCE_PERP_BTC_USDT","interval":"1h","limit":100}' --json
+rapidx market get-funding-rate   --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx market get-mark-price     --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx market get-symbol-info    --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx market get-open-interest  --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+```
+
+### Portfolio
+
+```bash
+rapidx portfolio overview --json
+rapidx portfolio assets --json
+rapidx portfolio statement --json
+rapidx portfolio user-fee-rate --json
+rapidx portfolio position-bracket --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+```
+
+`set-position-mode` is a write operation — preview first:
+
+```bash
+rapidx trade preview --input '{"targetCapabilityId":"portfolio.set-position-mode","exchange":"BINANCE","mode":"NET"}' --json
+```
 
 ### Orders
 
-All order writes require preview.
-
-| CLI | MCP tool |
-|-----|----------|
-| `rapidx order preview` | `rapidx/order/preview` |
-| `rapidx order place-preview` | `rapidx/order/place-preview` |
-| `rapidx order place` | `rapidx/order/place` |
-| `rapidx order amend-preview` | `rapidx/order/amend-preview` |
-| `rapidx order amend` | `rapidx/order/amend` |
-| `rapidx order cancel-preview` | `rapidx/order/cancel-preview` |
-| `rapidx order cancel` | `rapidx/order/cancel` |
-| `rapidx order get` | `rapidx/order/get` |
-| `rapidx order list` | `rapidx/order/list` |
-| `rapidx order history` | `rapidx/order/history` |
-
-> `rapidx order preview` / `rapidx/order/preview` is a general order preview entry point. `rapidx order place-preview` / `amend-preview` / `cancel-preview` are operation-specific and internally route through the same preview engine.
-
-**Place order:**
-
 ```bash
-# Preview
-rapidx order place-preview --input '{
-  "symbol": "BINANCE_PERP_BTC_USDT",
-  "side": "BUY",
-  "positionSide": "LONG",
-  "orderType": "LIMIT",
-  "price": "65000",
-  "quantity": "0.001",
-  "maxNotional": "100",
-  "clientOrderId": "agent-001",
-  "postOnly": true
-}' --json
+# Preview (required before place/replace/cancel)
+rapidx order place-preview   --input '{"symbol":"BINANCE_PERP_BTC_USDT","side":"BUY","positionSide":"LONG","orderType":"LIMIT","price":"65000","quantity":"0.001","maxNotional":"100","clientOrderId":"agent-001","postOnly":true}' --json
+rapidx order replace-preview --input '{"orderId":"1234567890123456","price":"64000"}' --json
+rapidx order cancel-preview  --input '{"orderId":"1234567890123456"}' --json
 
-# Submit — use the submitToken from the preview response as continueConsentId
-rapidx order place --input '{
-  "symbol": "BINANCE_PERP_BTC_USDT",
-  "side": "BUY",
-  "positionSide": "LONG",
-  "orderType": "LIMIT",
-  "price": "65000",
-  "quantity": "0.001",
-  "maxNotional": "100",
-  "clientOrderId": "agent-001",
-  "postOnly": true,
-  "previewId": "rpv_xxx",
-  "continueConsentId": "confirm_rpv_xxx"
-}' --json
+# Submit (include previewId + continueConsentId from preview response)
+# continueConsentId = preview response's confirmation.submitToken
+rapidx order place  --input '{...same params...,"previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx"}' --json
+rapidx order replace --input '{"orderId":"...","price":"64000","previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx"}' --json
+rapidx order cancel  --input '{"orderId":"...","previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx"}' --json
+
+# Reads
+rapidx order query       --input '{"clientOrderId":"agent-001"}' --json
+rapidx order open-orders --json
+rapidx order history     --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx order cancel-all  --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 ```
 
-Use `quantity` for base/contract quantity. Use `amount` for quote-notional spot market buy. Do not send both.
+`positionSide` (`LONG` or `SHORT`) is **required** — competition accounts default to `BOTH` (hedge) mode.
 
-`orderId` must be a 16-digit RapidX order ID. Wrong format → `RCORE00002`. Valid format but missing → `NOT_FOUND`.
+`orderId` must be a 16-digit RapidX order ID. Wrong format → `RCORE00002`. Valid but missing → `NOT_FOUND`.
 
-`amend-preview` and `cancel-preview` read back the order first. If the order is already terminal, no usable submit token is returned.
-
-Cancel is asynchronous at the exchange layer. Check `cancelAccepted`, `terminalStateConfirmed`, and `recommendedAction`; poll `rapidx order get` until `CANCELED` if terminal state is not confirmed.
-
-**Read orders:**
-
-```bash
-rapidx order get     --input '{"orderId":"1234567890123456"}' --json
-rapidx order list    --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-rapidx order history --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-```
+Cancel is asynchronous at the exchange layer. Check `cancelAccepted` and `terminalStateConfirmed`; poll `rapidx order query` until `CANCELED` if not confirmed.
 
 ### Positions
 
-| CLI | MCP tool |
-|-----|----------|
-| `rapidx position list` | `rapidx/position/list` |
-| `rapidx position history` | `rapidx/position/history` |
-| `rapidx position close` | `rapidx/position/close` |
-| `rapidx position set-leverage` | `rapidx/position/set-leverage` |
-
-Position writes use `rapidx trade preview`:
-
 ```bash
-# Set leverage
-rapidx trade preview --input '{
-  "targetCapabilityId": "position.set-leverage",
-  "symbol": "BINANCE_PERP_BTC_USDT",
-  "leverage": 5
-}' --json
+rapidx position query        --json
+rapidx position history      --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+rapidx position get-leverage --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 
-# Close position (no side/quantity — use reduce-only order for partial close)
-rapidx trade preview --input '{
-  "targetCapabilityId": "position.close",
-  "symbol": "BINANCE_PERP_BTC_USDT",
-  "reduceOnly": true,
-  "maxNotional": "100"
-}' --json
+# Writes — preview first via rapidx trade preview
+rapidx trade preview --input '{"targetCapabilityId":"position.set-leverage","symbol":"BINANCE_PERP_BTC_USDT","leverage":5}' --json
+rapidx trade preview --input '{"targetCapabilityId":"position.close","symbol":"BINANCE_PERP_BTC_USDT","reduceOnly":true,"maxNotional":"100"}' --json
+
+rapidx position set-leverage --input '{"previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx","symbol":"BINANCE_PERP_BTC_USDT","leverage":5}' --json
+rapidx position close        --input '{"previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx","symbol":"BINANCE_PERP_BTC_USDT","reduceOnly":true,"maxNotional":"100"}' --json
+rapidx position close-all    --input '{"exchange":"BINANCE"}' --json
 ```
 
-If no open position exists, `position.close` preview returns `BLOCKED` with `NO_POSITION_TO_CLOSE`.
+`position.close` does not accept `side` or `quantity`. In HEDGE mode pass `positionSide: "LONG"` or `"SHORT"`; in NET mode omit `positionSide`. If no position exists, preview returns `BLOCKED` with `NO_POSITION_TO_CLOSE`.
 
-`maxNotional` is a safety upper bound — not the target close amount.
+### Transactions
+
+```bash
+rapidx transaction executions --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
+```
 
 ### Algo Orders
-
-| CLI | MCP tool |
-|-----|----------|
-| `rapidx algo list` | `rapidx/algo/list` |
-| `rapidx algo place` | `rapidx/algo/place` |
-| `rapidx algo amend` | `rapidx/algo/amend` |
-| `rapidx algo cancel` | `rapidx/algo/cancel` |
-
-Algo writes require preview via `rapidx trade preview` with `targetCapabilityId: "algo.place"` (or `algo.amend`, `algo.cancel`).
 
 TPSL example:
 
 ```bash
+# Preview via rapidx trade preview
 rapidx trade preview --input '{
   "targetCapabilityId": "algo.place",
   "symbol": "BINANCE_PERP_BTC_USDT",
@@ -295,18 +421,79 @@ rapidx trade preview --input '{
   "stopLossPrice": "62000",
   "takeProfitPrice": "70000"
 }' --json
+
+rapidx algo place  --input '{"previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx",...}' --json
+rapidx algo replace --input '{"algoOrderId":"...","previewId":"rpv_xxx","continueConsentId":"..."}' --json
+rapidx algo cancel  --input '{"algoOrderId":"...","previewId":"rpv_xxx","continueConsentId":"..."}' --json
+rapidx algo open-orders --json
+rapidx algo query       --input '{"algoOrderId":"..."}' --json
+rapidx algo history     --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 ```
 
 TPSL and entire-close-position algo orders may use `MARKET` execution — this is expected per RapidX rules.
 
+### Automation Sessions (CLI)
+
+Automation sessions let the user authorize bounded automated trading without per-order chat confirmation. Preview is still required for every write; the session replaces the per-order chat approval.
+
+**Start a session:**
+
+```bash
+rapidx automation start --input '{
+  "symbols": ["BINANCE_PERP_BTC_USDT"],
+  "maxNotionalPerOrder": "100",
+  "maxTotalNotional": "1000",
+  "expiresInSeconds": 3600,
+  "allowedActions": ["order.place", "order.replace", "order.cancel"],
+  "allowedOrderTypes": ["LIMIT", "MARKET"],
+  "explicitUserConsent": true,
+  "acceptedRiskText": "I authorize RapidX automation for BINANCE_PERP_BTC_USDT with max 100 USDT per order and 1000 USDT total for 1 hour."
+}' --json
+```
+
+Response returns `automationSessionId`. Pass it into previews:
+
+```bash
+rapidx order place-preview --input '{
+  "automationSessionId": "ras_xxx",
+  "symbol": "BINANCE_PERP_BTC_USDT",
+  "side": "BUY",
+  "orderType": "LIMIT",
+  "price": "65000",
+  "quantity": "0.001",
+  "maxNotional": "100",
+  "clientOrderId": "auto-001"
+}' --json
+```
+
+Submit with the same params plus `previewId` and `continueConsentId`:
+
+```bash
+rapidx order place --input '{
+  "automationSessionId": "ras_xxx",
+  ...same business params...,
+  "previewId": "rpv_xxx",
+  "continueConsentId": "confirm_rpv_xxx"
+}' --json
+```
+
+**Manage sessions:**
+
+```bash
+rapidx automation list --json
+rapidx automation status --input '{"automationSessionId":"ras_xxx"}' --json
+rapidx automation extend --input '{
+  "automationSessionId": "ras_xxx",
+  "expiresInSeconds": 7200,
+  "explicitUserConsent": true,
+  "acceptedRiskText": "I authorize extending this RapidX automation session."
+}' --json
+rapidx automation stop --input '{"automationSessionId":"ras_xxx"}' --json
+```
+
+Agent rules: start only after explicit user authorization; pass `automationSessionId` into every preview; do not expand scope without a new session; stop when the user ends automation.
+
 ### Live Trade Verification
-
-| CLI | MCP tool |
-|-----|----------|
-| `rapidx trade verify-live` | `rapidx/trade/verify-live` |
-| `rapidx self-check trade-verify` | — | *(CLI compatibility alias for `verify-live`)* |
-
-Requires explicit user consent. Submits a real post-only limit order, then queries, amends, cancels, and verifies cleanup.
 
 ```bash
 rapidx trade verify-live --input '{
@@ -319,9 +506,24 @@ rapidx trade verify-live --input '{
 }' --json
 ```
 
-Steps: self-check → symbol rules → internal preview → place → get → amend → cancel → cleanup check.
+Use `rapidx self-check --json` for routine read-only checks. Use `verify-live` only after explicit user consent for a real-order test.
 
-`rapidx/trading-verification` is kept as a compatibility alias.
+`rapidx self-check trade-verify` is a CLI compatibility alias for `verify-live`.
+
+---
+
+## Readback Patterns
+
+Do not treat a submit response as final state. Always read back after writes:
+
+| Operation | Read back with |
+|-----------|---------------|
+| `order place` | `rapidx order query`, then `rapidx transaction executions` if filled |
+| `order replace` | `rapidx order query` |
+| `order cancel` | `rapidx order query` or `rapidx order open-orders` |
+| `order cancel-all` | `rapidx order open-orders` |
+| `position close` | `rapidx position query` |
+| `algo place/replace/cancel` | `rapidx algo query` or `rapidx algo open-orders` |
 
 ---
 
@@ -347,15 +549,26 @@ Check `message`, `code`, and `evidence`. Common causes: missing credentials, wro
 
 - Was the matching preview called first?
 - Is `previewId` present?
-- Does `continueConsentId` equal `data.confirmation.submitToken` from the preview?
-- Do the submit params match the preview params exactly?
+- Does `continueConsentId` equal the preview's `confirmation.submitToken`?
+- Do submit params match preview params exactly?
 - Is the preview expired (>5 min)?
 
 ### MCP tools not visible
 
-Verify MCP config uses `"command": "rapidx", "args": ["mcp", "serve"]`, then reload the agent host.
+Verify MCP config uses `"command": "rapidx", "args": ["mcp", "serve"]`, then reload the agent host. If the host does not inherit shell `PATH`, set `command` to the absolute path from `which rapidx`.
 
-If the agent host does not inherit shell `PATH`, set `command` to the absolute path from `which rapidx`.
+### `rapidx mcp serve` looks stuck
+
+`rapidx mcp serve` is a long-running stdio MCP server — configure it in the MCP host, do not run it as a one-shot command. Use `rapidx self-check --json` for one-shot local verification.
+
+### Symbol not recognized
+
+RapidX requires canonical symbols — normalize before calling any tool:
+
+```
+BTCUSDT  →  BINANCE_PERP_BTC_USDT
+ETHUSDT  →  BINANCE_PERP_ETH_USDT
+```
 
 ---
 
@@ -365,10 +578,7 @@ If the agent host does not inherit shell `PATH`, set `command` to the absolute p
 rapidx update check --json
 npm install -g @liquiditytech/rapidx-cli@latest
 rapidx schema --json
-rapidx self-check --read-only --json
+rapidx self-check --json
 ```
 
 Upgrade skills with the same install method used for your agent host.
-
----
-
