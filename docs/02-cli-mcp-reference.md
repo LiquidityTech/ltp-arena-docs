@@ -5,14 +5,7 @@ CLI and MCP are **two independent integration paths** — choose either or both:
 - **CLI path**: call `rapidx <domain> <action> --input '...' --json` from any shell, script, or exec-capable language. No agent host required.
 - **MCP path**: register `rapidx mcp serve` as an MCP server in Claude Code, Codex, Cursor, or any MCP-capable host. Your agent calls `rapidx/order/place`, `rapidx/market/get-ticker`, etc. as structured tools — no shell commands in your agent code.
 
-Both paths use the same credentials, the same 46 capabilities, and the same preview-then-submit safety model.
-
-| Component | Version |
-|-----------|--------:|
-| RapidX CLI / MCP | `1.0.38` |
-| RapidX Skills | `1.0.13` |
-| MCP schema | `2026-05-23` |
-| Expected MCP tools | `46` |
+Both paths use the same credentials, the same capabilities, and the same preview-then-submit safety model.
 
 ---
 
