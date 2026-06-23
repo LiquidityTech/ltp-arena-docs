@@ -247,17 +247,6 @@ To construct a tool input:
 | `rapidx/position/close` | `DELETE /api/v1/trading/position` |
 | `rapidx/position/close-all` | `DELETE /api/v1/trading/positions` |
 
-#### Algo Orders (preview required for writes)
-
-| MCP tool | RapidX API |
-|----------|-----------|
-| `rapidx/algo/place` | `POST /api/v1/algo/order` |
-| `rapidx/algo/replace` | `PUT /api/v1/algo/order` |
-| `rapidx/algo/cancel` | `DELETE /api/v1/algo/order` |
-| `rapidx/algo/open-orders` | `GET /api/v1/algo/openOrders` |
-| `rapidx/algo/history` | `GET /api/v1/algo/history/orders` |
-| `rapidx/algo/query` | `GET /api/v1/algo/order` |
-
 #### Automation Sessions
 
 Automation sessions let a user authorize an agent to trade within a bounded scope without per-order chat confirmation. Preview is still required on every write — the session replaces the per-order chat approval, not the preview step.
@@ -396,35 +385,6 @@ rapidx position close-all    --input '{"exchange":"BINANCE"}' --json
 rapidx transaction executions --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
 ```
 
-### Algo Orders
-
-TPSL example:
-
-```bash
-# Preview via rapidx trade preview
-rapidx trade preview --input '{
-  "targetCapabilityId": "algo.place",
-  "symbol": "BINANCE_PERP_BTC_USDT",
-  "side": "SELL",
-  "orderType": "MARKET",
-  "maxNotional": "100",
-  "clientOrderId": "tpsl-001",
-  "algoType": "TPSL",
-  "conditionType": "ENTIRE_CLOSE_POSITION",
-  "stopLossPrice": "62000",
-  "takeProfitPrice": "70000"
-}' --json
-
-rapidx algo place  --input '{"previewId":"rpv_xxx","continueConsentId":"confirm_rpv_xxx",...}' --json
-rapidx algo replace --input '{"algoOrderId":"...","previewId":"rpv_xxx","continueConsentId":"..."}' --json
-rapidx algo cancel  --input '{"algoOrderId":"...","previewId":"rpv_xxx","continueConsentId":"..."}' --json
-rapidx algo open-orders --json
-rapidx algo query       --input '{"algoOrderId":"..."}' --json
-rapidx algo history     --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
-```
-
-TPSL and entire-close-position algo orders may use `MARKET` execution — this is expected per RapidX rules.
-
 ### Automation Sessions (CLI)
 
 Automation sessions let the user authorize bounded automated trading without per-order chat confirmation. Preview is still required for every write; the session replaces the per-order chat approval.
@@ -516,7 +476,6 @@ Do not treat a submit response as final state. Always read back after writes:
 | `order cancel` | `rapidx order query` or `rapidx order open-orders` |
 | `order cancel-all` | `rapidx order open-orders` |
 | `position close` | `rapidx position query` |
-| `algo place/replace/cancel` | `rapidx algo query` or `rapidx algo open-orders` |
 
 ---
 

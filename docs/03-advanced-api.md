@@ -257,8 +257,6 @@ Keepalive: send `{ "ping": <timestamp_ms> }` every 20 seconds; server replies `{
 | Exchange | Type | Examples |
 |----------|------|---------|
 | `BINANCE` | `PERP` | `BINANCE_PERP_BTC_USDT`, `BINANCE_PERP_ETH_USDT` |
-| `OKX` | `PERP` | `OKX_PERP_BTC_USDT`, `OKX_PERP_ETH_USDT` |
-| `EDX` | `PERP` | `EDX_PERP_ETH_USDT` |
 
 Channels marked "Perpetual only" reject `SPOT` symbols with error `11100`.
 
