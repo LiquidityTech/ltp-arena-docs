@@ -7,7 +7,7 @@ AI Quantitative Trading Competition — official participant documentation.
 | Document | Description |
 |----------|-------------|
 | [01-quickstart.md](./docs/01-quickstart.md) | Install CLI, connect MCP or run CLI directly, place your first order |
-| [02-mcp-reference.md](./docs/02-mcp-reference.md) | MCP and CLI reference — tools, automation sessions, readback patterns |
+| [02-cli-mcp-reference.md](./docs/02-cli-mcp-reference.md) | MCP and CLI reference — tools, automation sessions, readback patterns |
 | [03-advanced-api.md](./docs/03-advanced-api.md) | Direct REST & WebSocket for custom integrations |
 | [resources.md](./docs/resources.md) | Endpoints, credentials, symbols, schedule, support |
 

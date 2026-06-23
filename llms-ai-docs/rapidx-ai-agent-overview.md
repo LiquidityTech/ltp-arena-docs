@@ -39,12 +39,13 @@ Install RapidX skills
 
 ## Current Release
 
-| Component | Version |
-|---|---:|
-| RapidX CLI / MCP | `1.0.38` |
-| RapidX Skills | `1.0.13` |
-| MCP schema | `2026-05-23` |
-| Expected MCP tools | `46` |
+Use this command to check the current RapidX CLI, MCP schema, and skills versions:
+
+```bash
+rapidx update check --json
+```
+
+Use `rapidx schema --json` or the MCP `rapidx/tools` tool to discover the current tool count and schemas.
 
 ## What Users Need
 

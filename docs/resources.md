@@ -75,7 +75,7 @@ See [`01-quickstart.md`](./01-quickstart.md) §Step 3 Path A for per-agent-host 
 
 ## 5. CLI & MCP Tool Catalogue
 
-See [`02-mcp-reference.md`](./02-mcp-reference.md) for full input/output specs, the preview-then-submit pattern, and automation mode.
+See [`02-cli-mcp-reference.md`](./02-cli-mcp-reference.md) for full input/output specs, the preview-then-submit pattern, and automation mode.
 
 All CLI commands use the format `rapidx <domain> <action> --input '<json>' --json`.  
 All MCP tools use the `rapidx/` prefix.
@@ -174,7 +174,7 @@ All MCP tools use the `rapidx/` prefix.
 | `rapidx trade preview` | `rapidx/trade/preview` |
 | `rapidx trade verify-live` | `rapidx/trade/verify-live` |
 
-Full input/output specifications: [`02-mcp-reference.md`](./02-mcp-reference.md).
+Full input/output specifications: [`02-cli-mcp-reference.md`](./02-cli-mcp-reference.md).
 
 ---
 
@@ -220,7 +220,7 @@ rapidx market get-symbol-info --json
 | Document | Location |
 |----------|----------|
 | Getting started | [`01-quickstart.md`](./01-quickstart.md) |
-| CLI & MCP reference | [`02-mcp-reference.md`](./02-mcp-reference.md) |
+| CLI & MCP reference | [`02-cli-mcp-reference.md`](./02-cli-mcp-reference.md) |
 | Advanced REST & WebSocket | [`03-advanced-api.md`](./03-advanced-api.md) |
 | Resource manifest | This document |
 | GitHub repository | <https://github.com/LiquidityTech/ltp-arena-docs> |

@@ -8,8 +8,6 @@ Skills repository:
 https://github.com/LiquidityTech/ltp-rapidx-skill
 ```
 
-Current skills version: `1.0.13`.
-
 ## Included Skills
 
 | Skill | Purpose |

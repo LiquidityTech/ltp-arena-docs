@@ -4,14 +4,12 @@ This page maps RapidX CLI commands and MCP tools to their main capability areas.
 
 Use `rapidx schema --json` or `rapidx/tools` as the source of truth for the current runtime.
 
-Current release:
+Use these runtime commands to check current versions, tool count, and schemas:
 
-| Item | Value |
-|---|---:|
-| CLI / MCP version | `1.0.38` |
-| Skills version | `1.0.13` |
-| MCP schema | `2026-05-23` |
-| Expected MCP tools | `46` |
+```bash
+rapidx update check --json
+rapidx schema --json
+```
 
 ## Schema Discovery
 

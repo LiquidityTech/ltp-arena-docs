@@ -140,7 +140,7 @@ rapidx order open-orders --json        # current open orders
 rapidx position query --json           # open positions
 ```
 
-All commands return a stable JSON envelope. Always call `rapidx schema --json` first to get exact input schemas for the current version — see [`02-mcp-reference.md`](./02-mcp-reference.md) §CLI Reference for the full command list, automation sessions, and readback patterns.
+All commands return a stable JSON envelope. Always call `rapidx schema --json` first to get exact input schemas for the current version — see [`02-cli-mcp-reference.md`](./02-cli-mcp-reference.md) §CLI Reference for the full command list, automation sessions, and readback patterns.
 
 ---
 
@@ -257,7 +257,7 @@ rapidx order query --input '{"clientOrderId":"my-first-order"}' --json
 
 | Document | Contents |
 |----------|----------|
-| [`02-mcp-reference.md`](./02-mcp-reference.md) | Complete MCP tool reference + CLI command reference, automation sessions, readback patterns, troubleshooting |
+| [`02-cli-mcp-reference.md`](./02-cli-mcp-reference.md) | Complete MCP tool reference + CLI command reference, automation sessions, readback patterns, troubleshooting |
 | [`03-advanced-api.md`](./03-advanced-api.md) | Direct REST/WebSocket access for custom integrations |
 | [`resources.md`](./resources.md) | Endpoints, npm package, symbol list, schedule, support |
 
