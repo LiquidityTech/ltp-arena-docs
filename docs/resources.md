@@ -34,7 +34,12 @@ See [`03-advanced-api.md`](./03-advanced-api.md) for authentication, signature a
 
 ### Market Data WebSocket Rate Limits
 
-> TBD — details to be announced.
+| Mode | Max connections / IP | Max symbols / connection |
+|------|---------------------|--------------------------|
+| Unauthenticated | 5 | 5 |
+| Authenticated | 40 | 50 |
+
+> Authenticate with your competition API Key to reach the higher limits.
 
 ---
 
@@ -184,7 +189,7 @@ Supported exchanges: `BINANCE` · `OKX` · `EDX`
 > **Note**: Track A restricts trading to a defined set of Binance perpetual futures symbols.
 >
 > - **Symbol restriction**: only the symbols listed in the official competition announcement are permitted. Use `rapidx market get-symbol-info --json` to query tradable symbols, but always verify against the organizer's symbol list — *see official announcement for the complete list*.
-> - **Rate limits**: see [API rate limit documentation](https://apidocliquidity.readme.io/reference/get-account-list) for per-endpoint frequency caps.
+> - **Rate limits**: TBD — details to be announced.
 
 ### Common Symbols
 
