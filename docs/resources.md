@@ -14,7 +14,7 @@ Each participant receives a dedicated simulation account on the UAT mock matchin
 | Access Key (`LTP_ACCESS_KEY`) | *(issued individually, distributed via secure channel)* |
 | Secret Key (`LTP_SECRET_KEY`) | *(issued individually, distributed via secure channel)* |
 | API Host (`LTP_API_HOST`) | *(provided by organizer — **required, no default**)* |
-| Initial virtual balance | 10,000 USDT (subject to organizer announcement) |
+| Initial virtual balance | 1,000 USDT (subject to organizer announcement) |
 | Position mode | `BOTH` (hedge mode) by default |
 | Real-asset risk | **None.** All orders route to the mock matching engine. |
 
@@ -23,6 +23,8 @@ Each participant receives a dedicated simulation account on the UAT mock matchin
 ---
 
 ## 2. Service Endpoints
+
+See [`03-advanced-api.md`](./03-advanced-api.md) for authentication, signature algorithm, and full endpoint reference.
 
 | Service | URL |
 |---------|-----|
@@ -43,6 +45,8 @@ Each participant receives a dedicated simulation account on the UAT mock matchin
 
 ## 3. npm Packages
 
+See [`01-quickstart.md`](./01-quickstart.md) §Step 1 for install and registry troubleshooting.
+
 | Package | Description | Install |
 |---------|-------------|---------|
 | `@liquiditytech/rapidx-cli` | RapidX CLI (`rapidx` command) + `rapidx mcp serve` | `npm install -g @liquiditytech/rapidx-cli` |
@@ -60,16 +64,18 @@ npm install -g @liquiditytech/rapidx-cli@latest
 
 ## 4. Skills
 
+See [`01-quickstart.md`](./01-quickstart.md) §Step 3 Path A for per-agent-host install commands (Claude Code, Codex, Cursor, OpenClaw, Hermes).
+
 | Skill | Location | Purpose |
 |-------|----------|---------|
 | `ltp-rapidx-config` | `https://github.com/LiquidityTech/ltp-rapidx-skill` | Install CLI, collect credentials, configure MCP, run self-check |
 | `ltp-rapidx-trading` | Same repository | Discover tools, manage reads/writes, run live trade verification |
 
-See `README.md` §Step 1 for per-agent-host install commands.
-
 ---
 
 ## 5. CLI & MCP Tool Catalogue
+
+See [`02-mcp-reference.md`](./02-mcp-reference.md) for full input/output specs, the preview-then-submit pattern, and automation mode.
 
 All CLI commands use the format `rapidx <domain> <action> --input '<json>' --json`.  
 All MCP tools use the `rapidx/` prefix.
@@ -155,6 +161,13 @@ Format: `{EXCHANGE}_{TYPE}_{BASE}_{QUOTE}`
 
 Supported exchanges: `BINANCE` · `OKX` · `EDX`
 
+### Track A — Binance Perp Only
+
+> **Note**: Track A restricts trading to a defined set of Binance perpetual futures symbols.
+>
+> - **Symbol restriction**: only the symbols listed in the official competition announcement are permitted. Use `rapidx market get-symbol-info --json` to query tradable symbols, but always verify against the organizer's symbol list — *see official announcement for the complete list*.
+> - **Rate limits**: see [API rate limit documentation](https://apidocliquidity.readme.io/reference/get-account-list) for per-endpoint frequency caps.
+
 ### Common Symbols
 
 | Symbol | Description |
@@ -183,9 +196,9 @@ rapidx market get-symbol-info --json
 
 | Document | Location |
 |----------|----------|
-| Getting started | [`01-quickstart.md`](./01-quickstart.md) · [`01-quickstart.zh-CN.md`](./01-quickstart.zh-CN.md) |
-| CLI & MCP reference | [`02-mcp-reference.md`](./02-mcp-reference.md) · [`02-mcp-reference.zh-CN.md`](./02-mcp-reference.zh-CN.md) |
-| Advanced REST & WebSocket | [`03-advanced-api.md`](./03-advanced-api.md) · [`03-advanced-api.zh-CN.md`](./03-advanced-api.zh-CN.md) |
+| Getting started | [`01-quickstart.md`](./01-quickstart.md) |
+| CLI & MCP reference | [`02-mcp-reference.md`](./02-mcp-reference.md) |
+| Advanced REST & WebSocket | [`03-advanced-api.md`](./03-advanced-api.md) |
 | Resource manifest | This document |
 | GitHub repository | <https://github.com/LiquidityTech/ltp-arena-docs> |
 
@@ -253,4 +266,3 @@ Exact dates communicated via the organizer's official channel.
 
 ---
 
-**中文版**: [resources.zh-CN.md](./resources.zh-CN.md)

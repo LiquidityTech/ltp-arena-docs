@@ -2,7 +2,12 @@
 
 > Complete tool reference for all 34 MCP tools and 41 CLI capabilities.
 
-The CLI and MCP server share the same core executor. `rapidx mcp serve` exposes the same capabilities as MCP tools — no parallel implementations.
+CLI and MCP are **two independent integration paths** — choose either or both:
+
+- **CLI path**: call `rapidx <domain> <action> --input '...' --json` from any shell, script, or exec-capable language. No agent host required.
+- **MCP path**: register `rapidx mcp serve` as an MCP server in Claude Code, Codex, Cursor, or any MCP-capable host. Your agent calls `rapidx/order/place`, `rapidx/market/get-ticker`, etc. as structured tools — no shell commands in your agent code.
+
+Both paths use the same credentials, the same capabilities, and the same preview-then-submit safety model. The underlying executor is shared — there are no parallel implementations or behavioral differences.
 
 ---
 
@@ -118,17 +123,15 @@ When accepted, the preview response includes:
 
 ### Market Data
 
-Ticker, orderbook, and klines call Binance/OKX public APIs directly. Funding rate, mark price, and symbol info go through RapidX.
-
-| CLI | MCP tool | Data source |
-|-----|----------|-------------|
-| `rapidx market get-ticker` | `rapidx/market/get-ticker` | Binance / OKX public |
-| `rapidx market get-orderbook` | `rapidx/market/get-orderbook` | Binance / OKX public |
-| `rapidx market get-klines` | `rapidx/market/get-klines` | Binance / OKX public |
-| `rapidx market get-open-interest` | `rapidx/market/get-open-interest` | Binance / OKX public |
-| `rapidx market get-funding-rate` | `rapidx/market/get-funding-rate` | RapidX API |
-| `rapidx market get-mark-price` | `rapidx/market/get-mark-price` | RapidX API |
-| `rapidx market get-symbol-info` | `rapidx/market/get-symbol-info` | RapidX API |
+| CLI | MCP tool |
+|-----|----------|
+| `rapidx market get-ticker` | `rapidx/market/get-ticker` |
+| `rapidx market get-orderbook` | `rapidx/market/get-orderbook` |
+| `rapidx market get-klines` | `rapidx/market/get-klines` |
+| `rapidx market get-open-interest` | `rapidx/market/get-open-interest` |
+| `rapidx market get-funding-rate` | `rapidx/market/get-funding-rate` |
+| `rapidx market get-mark-price` | `rapidx/market/get-mark-price` |
+| `rapidx market get-symbol-info` | `rapidx/market/get-symbol-info` |
 
 **Key inputs:**
 
@@ -369,4 +372,3 @@ Upgrade skills with the same install method used for your agent host.
 
 ---
 
-**中文版**: [02-mcp-reference.zh-CN.md](./02-mcp-reference.zh-CN.md)

@@ -291,4 +291,3 @@ Channels marked "Perpetual only" reject `SPOT` symbols with error `11100`.
 
 ---
 
-**中文版**: [03-advanced-api.zh-CN.md](./03-advanced-api.zh-CN.md)

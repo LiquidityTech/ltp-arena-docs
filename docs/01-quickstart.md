@@ -2,7 +2,14 @@
 
 > Install the CLI, connect your agent, run your first trade — in under 10 minutes.
 
-RapidX CLI (`@liquiditytech/rapidx-cli` v1.0.31) is the single entry point for market data, account reads, order management, positions, and algo orders. Starting the CLI with `rapidx mcp serve` exposes the same capabilities as structured MCP tools for any MCP-capable agent host.
+RapidX CLI (`@liquiditytech/rapidx-cli` v1.0.31) provides two **independent** integration paths — choose either one or both:
+
+| Path | How you use it | Best for |
+|------|---------------|---------|
+| **CLI** | `rapidx <domain> <action> --input '...' --json` in your shell or code | Scripts, CI, exec-only agents |
+| **MCP** | `rapidx mcp serve` registered as an MCP server in Claude Code / Codex / Cursor | AI agent hosts that support MCP |
+
+The two paths share the same credentials and the same underlying capabilities. You do **not** need to use MCP to use the CLI, and you do **not** need to run CLI commands if your agent uses MCP.
 
 ---
 
@@ -52,11 +59,13 @@ rapidx auth check
 
 ---
 
-## Step 3 — Choose Your Path
+## Step 3 — Choose Your Integration Path
 
-### Path A — MCP (Recommended)
+CLI and MCP are independent — pick the one that fits your setup. You can switch or combine them at any time.
 
-For agents that natively support MCP: **Claude Code, Codex, Cursor, Continue, OpenCode**.
+### Path A — MCP
+
+For AI agent hosts that natively support MCP: **Claude Code, Codex, Cursor, Continue, OpenCode**. Your agent calls `rapidx/market/get-ticker`, `rapidx/order/place`, etc. as structured tools — no shell commands in your code.
 
 **Option 1: Install skills (let the agent do the rest)**
 
@@ -108,9 +117,9 @@ Add to your agent's MCP config file (e.g. `claude_desktop_config.json`):
 
 Restart the agent host. MCP tools become available under the `rapidx/` namespace.
 
-### Path B — CLI Only
+### Path B — CLI
 
-For exec-only agents and shell scripts. No MCP required.
+For exec-only agents, shell scripts, Python/Java/C++ bots, CI pipelines. No MCP setup required — call `rapidx` commands directly from your code.
 
 ```bash
 rapidx market get-ticker --input '{"symbol":"BINANCE_PERP_BTC_USDT"}' --json
@@ -240,4 +249,3 @@ rapidx order get --input '{"clientOrderId":"my-first-order"}' --json
 
 ---
 
-**中文版**: [01-quickstart.zh-CN.md](./01-quickstart.zh-CN.md)
