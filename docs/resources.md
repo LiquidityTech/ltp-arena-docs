@@ -34,12 +34,7 @@ See [`03-advanced-api.md`](./03-advanced-api.md) for authentication, signature a
 
 ### Market Data WebSocket Rate Limits
 
-| Mode | Max connections / IP | Max symbols / connection |
-|------|---------------------|--------------------------|
-| Unauthenticated | 5 | 5 |
-| Authenticated | 40 | 50 |
-
-> Authenticate with your competition API Key to reach the higher limits.
+> TBD — details to be announced.
 
 ---
 
@@ -201,9 +196,6 @@ Supported exchanges: `BINANCE` · `OKX` · `EDX`
 | `BINANCE_PERP_XRP_USDT` | Binance XRP perpetual futures |
 | `BINANCE_PERP_ADA_USDT` | Binance ADA perpetual futures |
 | `BINANCE_PERP_DOGE_USDT` | Binance DOGE perpetual futures |
-| `OKX_PERP_BTC_USDT` | OKX BTC perpetual futures |
-| `OKX_PERP_ETH_USDT` | OKX ETH perpetual futures |
-| `EDX_PERP_ETH_USDT` | EDX ETH perpetual futures |
 
 Full list:
 
@@ -269,12 +261,7 @@ Exact dates communicated via the organizer's official channel.
 
 ## 10. Support
 
-| Channel | Contact |
-|---------|---------|
-| Technical support email | `support@liquiditytech.com` |
-| Issue tracker | <https://github.com/liquiditytech/rapidx-cli/issues> |
-| Discord / community | *(link provided by organizer at registration)* |
-| Status page | <https://status.liquiditytech.com> |
+> TBD — details to be announced.
 
 ---
 
