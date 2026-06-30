@@ -147,7 +147,7 @@ Base URL: the `LTP_API_HOST` value provided by the organizer.
 
 [User Data Streams overview →](https://apidocliquidity.readme.io/reference/ws-user-data-overview)
 
-**URL:** `wss://wss-uat.liquiditytech.com/v1/private`
+**URL:** `wss://wss.ltp-contest.com/v1/private`
 
 **Login:**
 
@@ -204,7 +204,7 @@ Keepalive: send `"ping"` every 15 seconds; server replies `"pong"`.
 
 [Market Data overview →](https://apidocliquidity.readme.io/reference/market-data-overview)
 
-**URL:** `wss://mds-uat.liquiditytech.com/marketdata/v2/public`
+**URL:** `wss://mds.ltp-contest.com/marketdata/v2/public`
 
 Append `?binary=false` for plain-text JSON instead of GZIP frames.
 

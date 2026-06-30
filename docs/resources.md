@@ -6,7 +6,7 @@
 
 ## 1. Competition Account
 
-Each participant receives a dedicated simulation account on the UAT mock matching environment.
+Each participant receives a dedicated simulation account on the competition simulation environment.
 
 | Item | Value |
 |------|-------|
@@ -16,7 +16,7 @@ Each participant receives a dedicated simulation account on the UAT mock matchin
 | API Host (`LTP_API_HOST`) | *(provided by organizer — **required, no default**)* |
 | Initial virtual balance | 1,000 USDT (subject to organizer announcement) |
 | Position mode | `BOTH` (hedge mode) by default |
-| Real-asset risk | **None.** All orders route to the mock matching engine. |
+| Real-asset risk | **None.** All orders route to the simulation matching engine. |
 
 > Credentials are delivered via the registration channel. Treat them as production secrets — never commit, log, or share them.
 
@@ -29,8 +29,8 @@ See [`03-advanced-api.md`](./03-advanced-api.md) for authentication, signature a
 | Service | URL |
 |---------|-----|
 | REST API | *(use `LTP_API_HOST` value provided by organizer)* |
-| Private WebSocket (trading & account events) | `wss://wss-uat.liquiditytech.com/v1/private` |
-| Market Data WebSocket (OPEN API) | `wss://mds-uat.liquiditytech.com/marketdata/v2/public` |
+| Private WebSocket (trading & account events) | `wss://wss.ltp-contest.com/v1/private` |
+| Market Data WebSocket (OPEN API) | `wss://mds.ltp-contest.com/marketdata/v2/public` |
 
 ### Market Data WebSocket Rate Limits
 
@@ -255,7 +255,7 @@ rapidx trade verify-live --input '{
 | Phase | Activity |
 |-------|----------|
 | Registration | Receive credentials, install CLI, run self-check |
-| Development | Build and test agent against live UAT data |
+| Development | Build and test your agent against live competition data |
 | Submission cut-off | Freeze agent code + model weights |
 | Evaluation window | Frozen agents run on live forward market data |
 | Scoring & awards | Multi-metric scoring (return, Sharpe, max drawdown, win rate) |
@@ -272,7 +272,7 @@ Exact dates communicated via the organizer's official channel.
 
 ## 11. Safety & Compliance Reminders
 
-1. **No real assets at risk** — competition runs on the UAT mock matching engine.
+1. **No real assets at risk** — competition runs on the competition simulation environment.
 2. **Preview before every write** — all writes require preview; the preview never submits a real order.
 3. **`LTP_API_HOST` is required** — missing host returns `RCORE01003`.
 4. **State confirmation after every write** — call `rapidx order query` or `rapidx position query`. No blind retries.

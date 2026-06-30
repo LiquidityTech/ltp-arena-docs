@@ -19,7 +19,7 @@ The two paths share the same credentials and the same underlying capabilities. Y
 
 Competition accounts are issued by the organizer at registration. Each account includes:
 - `LTP_ACCESS_KEY` and `LTP_SECRET_KEY` — your API credentials
-- `LTP_API_HOST` — the UAT API base URL (**required, no default**)
+- `LTP_API_HOST` — the competition API base URL (**required, no default**)
 - Initial virtual balance: **1,000 USDT** (simulation only, no real assets at risk)
 - Default position mode: `BOTH` (hedge mode)
 
