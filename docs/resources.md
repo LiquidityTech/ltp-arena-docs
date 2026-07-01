@@ -31,6 +31,7 @@ See [`03-advanced-api.md`](./03-advanced-api.md) for authentication, signature a
 | REST API | *(use `LTP_API_HOST` value provided by organizer)* |
 | Private WebSocket (trading & account events) | `wss://wss.ltp-contest.com/v1/private` |
 | Market Data WebSocket (OPEN API) | `wss://mds.ltp-contest.com/marketdata/v2/public` |
+| News Feed WebSocket | `wss://feeds.ltp-contest.com/feeds/v2/public` |
 
 ### Market Data WebSocket Rate Limits
 
@@ -40,6 +41,16 @@ See [`03-advanced-api.md`](./03-advanced-api.md) for authentication, signature a
 | Authenticated | 40 | 50 |
 
 > Authenticate with your competition API Key to reach the higher limits.
+
+### News Feed WebSocket Connection Limits
+
+| Limit | Value | Notes |
+|-------|-------|-------|
+| Max concurrent connections / IP | **5** | Exceeding this returns HTTP **429** — handshake rejected |
+| Heartbeat timeout | **90 seconds** | Server closes the connection if no `ping` is received within 90 s |
+| Heartbeat check cycle | 30 seconds | Server scans for stale connections every 30 s |
+
+> **Reconnection note**: subscription state is not preserved on the server. After a reconnect, you must re-send the `subscribe` message for all channels.
 
 ---
 

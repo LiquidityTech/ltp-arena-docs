@@ -248,6 +248,328 @@ Keepalive: send `{ "ping": <timestamp_ms> }` every 20 seconds; server replies `{
 
 ---
 
+## News Feed WebSocket
+
+Real-time crypto news and hot-topic push stream sourced from the feeds-collect-service.
+
+### Endpoint & Authentication
+
+**URL:** `wss://feeds.ltp-contest.com/feeds/v2/public`
+
+No authentication required. Connect and subscribe immediately — the endpoint is public.
+
+### Connection Limits
+
+| Limit | Value | Notes |
+|-------|-------|-------|
+| Max concurrent connections / IP | **5** | Exceeding this returns HTTP **429** at the WS upgrade handshake |
+| Heartbeat timeout | **90 seconds** | Server closes the connection if no `ping` is received within 90 s |
+| Heartbeat check cycle | 30 seconds | Server scans for stale connections every 30 s |
+
+IP is identified from `X-Forwarded-For` (first segment) → `X-Real-IP` → RemoteAddress.
+
+### Subscribe
+
+Send a `subscribe` message immediately after connecting. Multiple channels can be batched in one request; subscribing to the same channel more than once is idempotent.
+
+```json
+{
+  "event": "subscribe",
+  "arg": [
+    { "channel": "news.category.all" },
+    { "channel": "news.hot.all" }
+  ]
+}
+```
+
+**Subscribe response:**
+
+```json
+{
+  "event": "subscribe",
+  "code": "0",
+  "msg": "success",
+  "arg": [
+    { "channel": "news.category.all" },
+    { "channel": "news.hot.all" }
+  ],
+  "invalidArg": []
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `code` | `"0"` = success |
+| `arg` | Channels that were successfully subscribed |
+| `invalidArg` | Unrecognised channels — does not affect valid subscriptions |
+
+### Channels
+
+| Channel | Description | Push trigger |
+|---------|-------------|--------------|
+| `news.category.all` | All-category crypto news items | New article ingested by feeds-collect-service |
+| `news.hot.all` | Hot-topic items | New hot item ingested by feeds-collect-service |
+
+Pushes are fan-out broadcasts — every connection subscribed to the same channel receives the identical message. There is no per-connection filtering.
+
+### Message Structures
+
+#### News push — `news.category.all`
+
+```json
+{
+  "channel": "news.category.all",
+  "data": {
+    "id": 100001,
+    "newsId": "tweet_1234567890",
+    "newsType": "news",
+    "category": 1,
+    "title": "BTC surges above $70,000",
+    "content": "Bitcoin has broken the $70k resistance...",
+    "publishTime": 1719388800000,
+    "sourceUrl": "https://twitter.com/xxx/status/xxx",
+    "originalUrl": "https://twitter.com/xxx/status/xxx",
+    "authorName": "cryptonews",
+    "authorDisplayName": "Crypto News",
+    "authorAvatar": "https://cdn.example.com/avatar.jpg",
+    "isBlueVerified": true,
+    "viewCount": 12000,
+    "likeCount": 3400,
+    "commentCount": 210,
+    "retweetCount": 890,
+    "currencies": [
+      { "currencyId": "1", "fullName": "BITCOIN", "symbol": "BTC" }
+    ],
+    "mediaAttachments": [
+      {
+        "sosoUrl": "https://cdn.sosovalue.com/media/xxx.jpg",
+        "originalUrl": "https://pbs.twimg.com/media/xxx.jpg",
+        "shortUrl": null,
+        "mediaType": "photo"
+      }
+    ],
+    "quotedContent": {
+      "content": "Original tweet being quoted...",
+      "createdAtSource": 1719388700000,
+      "originalUrl": "https://twitter.com/yyy/status/yyy",
+      "author": "another_user",
+      "nickName": "Another User",
+      "authorAvatarUrl": "https://cdn.example.com/avatar2.jpg",
+      "isBlueVerified": false,
+      "verifiedType": null,
+      "impressionCount": 5000,
+      "likeCount": 120,
+      "replyCount": 30,
+      "retweetCount": 45,
+      "mediaAttachments": []
+    },
+    "createdAt": 1719388810000
+  }
+}
+```
+
+**`data` fields:**
+
+| Field | Type | Nullable | Description |
+|-------|------|---------|-------------|
+| `id` | long | No | Database primary key |
+| `newsId` | string | No | Business unique ID (e.g. original tweet ID) |
+| `newsType` | string | No | Fixed value `"news"` |
+| `category` | int | Yes | Category ID |
+| `title` | string | Yes | Headline |
+| `content` | string | Yes | Body text |
+| `publishTime` | long | Yes | Original publish time (epoch ms) |
+| `sourceUrl` | string | Yes | Source link |
+| `originalUrl` | string | Yes | Original article link |
+| `authorName` | string | Yes | Author username |
+| `authorDisplayName` | string | Yes | Author display name |
+| `authorAvatar` | string | Yes | Author avatar URL |
+| `isBlueVerified` | boolean | Yes | Blue-tick verified |
+| `viewCount` | long | Yes | View count |
+| `likeCount` | long | Yes | Like count |
+| `commentCount` | long | Yes | Comment count |
+| `retweetCount` | long | Yes | Retweet count |
+| `currencies` | array\|null | Yes | Associated currencies — see `currencies` below |
+| `mediaAttachments` | array\|null | Yes | Media attachments — see `mediaAttachments` below |
+| `quotedContent` | object\|null | Yes | Quoted tweet — see `quotedContent` below |
+| `createdAt` | long | No | Ingestion time (epoch ms) |
+
+**`currencies` items:**
+
+| Field | Type | Nullable | Description |
+|-------|------|---------|-------------|
+| `currencyId` | string | No | Platform currency ID |
+| `fullName` | string | Yes | Full name, e.g. `BITCOIN` |
+| `symbol` | string | Yes | Ticker symbol, e.g. `BTC` |
+
+**`mediaAttachments` items:**
+
+| Field | Type | Nullable | Description |
+|-------|------|---------|-------------|
+| `sosoUrl` | string | No | CDN-hosted URL |
+| `originalUrl` | string | Yes | Original media URL |
+| `shortUrl` | string | Yes | Short URL |
+| `mediaType` | string | No | `photo` / `video` / `gif` |
+
+**`quotedContent` fields:**
+
+| Field | Type | Nullable | Description |
+|-------|------|---------|-------------|
+| `content` | string | Yes | Quoted text |
+| `createdAtSource` | long | Yes | Quoted tweet publish time (epoch ms) |
+| `originalUrl` | string | Yes | Quoted tweet link |
+| `author` | string | Yes | Twitter @username |
+| `nickName` | string | Yes | Author display name |
+| `authorAvatarUrl` | string | Yes | Author avatar URL |
+| `isBlueVerified` | boolean | Yes | Blue-tick verified |
+| `verifiedType` | string | Yes | Verification type, e.g. `Business` |
+| `impressionCount` | long | Yes | View count |
+| `likeCount` | long | Yes | Like count |
+| `replyCount` | long | Yes | Reply count |
+| `retweetCount` | long | Yes | Retweet count |
+| `mediaAttachments` | array\|null | Yes | Same structure as parent `mediaAttachments` |
+
+#### Hot push — `news.hot.all`
+
+```json
+{
+  "channel": "news.hot.all",
+  "data": {
+    "id": 200001,
+    "newsId": "hot_9876543210",
+    "newsType": "hot",
+    "title": "Ethereum upgrade scheduled",
+    "content": "The next major Ethereum upgrade...",
+    "publishTime": 1719388800000,
+    "ingestTime": 1719388820000,
+    "sourceUrl": "https://example.com/news/xxx",
+    "createdAt": 1719388825000
+  }
+}
+```
+
+Hot items contain a reduced field set compared to news items:
+
+| Field | Type | Nullable | Description |
+|-------|------|---------|-------------|
+| `id` | long | No | Database primary key |
+| `newsId` | string | No | Business unique ID |
+| `newsType` | string | No | Fixed value `"hot"` |
+| `title` | string | Yes | Headline |
+| `content` | string | Yes | Body text |
+| `publishTime` | long | Yes | Original publish time (epoch ms) |
+| `ingestTime` | long | No | Ingestion time (epoch ms) |
+| `sourceUrl` | string | Yes | Source link |
+| `createdAt` | long | No | Database insert time (epoch ms) |
+
+> Hot items do **not** include `category`, `author*`, interaction counts, `currencies`, `mediaAttachments`, or `quotedContent`.
+
+#### Heartbeat
+
+Client must send a ping at least every 90 seconds. Recommended interval: ≤ 30 seconds.
+
+```json
+{ "ping": 1719388800000 }
+```
+
+Server response:
+
+```json
+{ "pong": 1719388800001 }
+```
+
+### Error Codes
+
+| Layer | Code | Condition |
+|-------|------|-----------|
+| HTTP | `429` | IP concurrent connection limit (5) exceeded at WS handshake |
+| WS message | `500` | Unexpected server error processing a client message |
+
+Error message structure:
+
+```json
+{ "event": "error", "code": "500", "msg": "Server Error" }
+```
+
+### Python Quick-Start
+
+```python
+import asyncio, json, time, ssl
+import websockets
+from websockets.exceptions import ConnectionClosed
+
+URL = "wss://feeds.ltp-contest.com/feeds/v2/public"
+CHANNELS = ["news.category.all", "news.hot.all"]
+HEARTBEAT_INTERVAL = 20  # seconds (server timeout: 90 s)
+
+
+async def on_push(channel: str, data: dict) -> None:
+    if channel == "news.category.all":
+        print(f"[news] {data.get('newsId')}  {data.get('title')}")
+    elif channel == "news.hot.all":
+        print(f"[hot]  {data.get('newsId')}  {data.get('title')}")
+
+
+async def heartbeat(ws) -> None:
+    while True:
+        await asyncio.sleep(HEARTBEAT_INTERVAL)
+        await ws.send(json.dumps({"ping": int(time.time() * 1000)}))
+
+
+async def run() -> None:
+    reconnect_delay = 1.0
+    while True:
+        try:
+            async with websockets.connect(URL) as ws:
+                print("[feeds] connected")
+                reconnect_delay = 1.0
+
+                await ws.send(json.dumps({
+                    "event": "subscribe",
+                    "arg": [{"channel": c} for c in CHANNELS]
+                }))
+
+                hb = asyncio.create_task(heartbeat(ws))
+                try:
+                    async for raw in ws:
+                        msg = json.loads(raw)
+                        if "pong" in msg:
+                            continue
+                        if msg.get("event") == "subscribe":
+                            print("[feeds] subscribed:", msg.get("arg"),
+                                  "invalid:", msg.get("invalidArg"))
+                        elif msg.get("event") == "error":
+                            print("[feeds] error:", msg.get("code"), msg.get("msg"))
+                        else:
+                            await on_push(msg.get("channel", ""), msg.get("data", {}))
+                finally:
+                    hb.cancel()
+
+        except ConnectionClosed as e:
+            print(f"[feeds] closed: {e}")
+        except Exception as e:
+            print(f"[feeds] error: {e}")
+
+        print(f"[feeds] reconnect in {reconnect_delay:.0f}s")
+        await asyncio.sleep(reconnect_delay)
+        reconnect_delay = min(reconnect_delay * 2, 30.0)
+
+
+if __name__ == "__main__":
+    asyncio.run(run())
+```
+
+### Notes
+
+1. **Heartbeat is client-initiated.** Send `ping` every ≤ 30 seconds. The server closes the connection after 90 seconds of inactivity.
+2. **IP limit is 5 concurrent connections.** HTTP 429 is returned at the WS handshake if exceeded. Implement connection reuse or exponential backoff.
+3. **Subscription state is not preserved on reconnect.** Re-send the `subscribe` message after every reconnection.
+4. **Batch subscriptions are supported.** A single `subscribe` message may list multiple channels.
+5. **Optional fields may be `null`.** Always null-check `currencies`, `mediaAttachments`, and `quotedContent` before accessing their contents.
+6. **Pushes are fan-out broadcasts.** All connections subscribed to the same channel receive the same message — there is no per-connection filtering.
+
+---
+
 ## Symbol Format
 
 ```
